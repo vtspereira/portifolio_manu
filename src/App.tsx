@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Compass, MapPin, Mail, Globe, Phone, Calendar } from 'lucide-react';
+import { Compass, MapPin, Mail, Globe, Phone, Calendar, ArrowRight } from 'lucide-react';
 import { Navigation } from './components/Navigation';
 import { Page } from './components/Page';
 import { ProjectPage } from './components/ProjectPage';
@@ -13,6 +13,14 @@ function App() {
   const [viewingFullProject, setViewingFullProject] = useState<number | null>(null);
   const totalPages = projects.length + 3; // Cover + Bio + Index + Projects
   const [isMobile, setIsMobile] = useState(false);
+
+  // Definir títulos personalizados para cada página
+  const pageTitles = [
+    "Inicial",
+    "Sobre mim",
+    "Projetos",
+    ...projects.map(project => project.title)
+  ];
 
   // Detectar se é dispositivo móvel e ajustar variável CSS para altura da viewport
   useEffect(() => {
@@ -121,7 +129,7 @@ function App() {
           width: "100%",
           height: "100%",
           overflow: "auto",
-          backgroundColor: "white",
+          backgroundColor: "#F8F5F2",
           zIndex: 9999
         }}>
           <FullProjectView project={projectToShow} onBack={handleBackFromFullProject} />
@@ -134,145 +142,204 @@ function App() {
     <div className="relative w-screen h-screen overflow-hidden pb-footer">
       <AnimatePresence mode="wait" initial={false}>
         {currentPage === 0 && (
-          <Page key="cover" className="bg-white">
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <Compass className="w-12 h-12 md:w-16 md:h-16 mb-6 md:mb-8 text-[#333333]" />
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-3 md:mb-4 text-[#333333] tracking-wide">SOFIA MARTINEZ</h1>
-              <p className="text-base md:text-lg lg:text-xl text-[#888888] font-light">ARCHITECTURAL PORTFOLIO</p>
+          <Page key="cover" className="bg-[#F8F5F2]">
+            <div className="h-full flex flex-col items-center justify-center text-center relative">
+              <Compass className="w-12 h-12 md:w-16 md:h-16 mb-6 md:mb-8 text-[#E0758A]" />
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-3 md:mb-4 text-[#1A1A1A] tracking-wide">SOFIA MARTINEZ</h1>
+              <p className="text-base md:text-lg lg:text-xl text-[#666666] font-light">ARCHITECTURAL PORTFOLIO</p>
+              
+              {/* Seta minimalista centralizada */}
+              <button 
+                onClick={() => handleNavigate('next')} 
+                className="absolute right-8 md:right-16 top-1/2 transform -translate-y-1/2 cursor-pointer focus:outline-none focus:ring-0 group"
+                aria-label="Próxima página"
+              >
+                <div className="relative flex flex-col items-center">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-[#E0758A] flex items-center justify-center bg-white hover:bg-[#F5C0CB] transition-all duration-300 hover:border-[#E0758A] animate-subtle-attention shadow-sm">
+                    <ArrowRight size={20} className="text-[#E0758A] transform transition-all duration-300 group-hover:translate-x-1" />
+                  </div>
+                  <span className="hidden md:block text-xs text-[#666666] font-light mt-2 whitespace-nowrap">Explorar portfólio</span>
+                </div>
+              </button>
             </div>
           </Page>
         )}
 
         {currentPage === 1 && (
-          <Page key="bio">
-            <div className="h-full grid grid-cols-12 gap-4 md:gap-6 lg:gap-8 overflow-hidden">
-              {/* Left Column */}
-              <div className="col-span-12 md:col-span-5 space-y-4 md:space-y-6 lg:space-y-8">
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-light text-[#333333] tracking-wide">sofia martinez</h1>
+          <Page key="bio" className="bg-[#F8F5F2]">
+            <div className="h-full flex flex-col md:flex-row overflow-hidden">
+              {/* Coluna lateral esquerda (30-35%) */}
+              <div className="w-full md:w-[35%] h-full md:min-h-full p-4 md:p-6 lg:p-8 md:border-r border-[#E5E0DB] flex flex-col">
+                {/* Foto e informações pessoais */}
+                <div className="mb-4 md:mb-5 flex flex-col items-center md:items-start">
+                  {/* Placeholder para foto */}
+                  <div className="w-24 h-24 md:w-28 md:h-28 mb-3 md:mb-4 bg-white rounded-full overflow-hidden flex items-center justify-center border border-[#E5E0DB] shadow-sm">
+                    <Compass className="w-9 h-9 text-[#E0758A]" />
+                  </div>
+                  
+                  <h1 className="text-xl md:text-2xl lg:text-2xl font-light text-[#1A1A1A] tracking-wide mb-1">sofia martinez</h1>
+                  <p className="text-xs font-light text-[#E0758A] mb-3 md:mb-4">Arquiteta & Designer</p>
+                </div>
                 
-                {/* Contact Info */}
-                <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-[#888888]">
-                  <div className="flex items-center gap-2">
-                    <MapPin size={14} className="flex-shrink-0 text-[#888888]" />
-                    <span>San Francisco, CA</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail size={14} className="flex-shrink-0 text-[#888888]" />
-                    <span>sofia.martinez@email.com</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Globe size={14} className="flex-shrink-0 text-[#888888]" />
-                    <span>www.sofiamartinez.com</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone size={14} className="flex-shrink-0 text-[#888888]" />
-                    <span>(555) 123-4567</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar size={14} className="flex-shrink-0 text-[#888888]" />
-                    <span>Born 1992</span>
+                {/* Informações de contato */}
+                <div className="mb-4 md:mb-5">
+                  <h2 className="text-xs uppercase tracking-wider text-[#1A1A1A] mb-2 font-light border-b border-[#E0758A] pb-1.5 inline-block">Contato</h2>
+                  <div className="space-y-2 mt-2">
+                    <div className="flex items-center gap-3">
+                      <MapPin size={14} className="flex-shrink-0 text-[#E0758A]" />
+                      <span className="text-xs text-[#666666]">San Francisco, CA</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Mail size={14} className="flex-shrink-0 text-[#E0758A]" />
+                      <a href="mailto:sofia.martinez@email.com" className="text-xs text-[#666666] hover:text-[#E0758A] transition-colors duration-300">sofia.martinez@email.com</a>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Globe size={14} className="flex-shrink-0 text-[#E0758A]" />
+                      <a href="https://www.sofiamartinez.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#666666] hover:text-[#E0758A] transition-colors duration-300">www.sofiamartinez.com</a>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone size={14} className="flex-shrink-0 text-[#E0758A]" />
+                      <span className="text-xs text-[#666666]">(555) 123-4567</span>
+                    </div>
                   </div>
                 </div>
-
-                {/* About Me Section */}
-                <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-light text-[#333333]">SOBRE MIM</h2>
-                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
-                  <p className="text-xs md:text-sm leading-relaxed text-[#555555] line-clamp-3 md:line-clamp-4">
+                
+                {/* Sobre mim */}
+                <div className="mb-4 md:mb-5">
+                  <h2 className="text-xs uppercase tracking-wider text-[#1A1A1A] mb-2 font-light border-b border-[#E0758A] pb-1.5 inline-block">Perfil</h2>
+                  <p className="text-xs leading-relaxed text-[#666666] mt-2">
                     With over a decade of experience in architectural design, I specialize in creating 
                     spaces that harmoniously blend functionality with aesthetic beauty. My approach 
-                    combines sustainable practices with innovative design solutions, ensuring each 
-                    project tells its own unique story while respecting its environmental context.
+                    combines sustainable practices with innovative design solutions.
                   </p>
                 </div>
-
-                {/* Education Section */}
-                <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-light text-[#333333]">EDUCAÇÃO</h2>
-                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
-                  <div className="space-y-2 md:space-y-3">
-                    <div>
-                      <p className="text-xs md:text-sm text-[#888888]">2014 - 2018</p>
-                      <p className="text-xs md:text-sm text-[#333333]">University of California, Berkeley</p>
-                      <p className="text-xs md:text-sm text-[#555555]">Master of Architecture</p>
+                
+                {/* Idiomas em formato horizontal */}
+                <div className="mb-4 md:mb-auto">
+                  <h2 className="text-xs uppercase tracking-wider text-[#1A1A1A] mb-2 font-light border-b border-[#E0758A] pb-1.5 inline-block">Idiomas</h2>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-2">
+                    <div className="flex items-center">
+                      <span className="text-xs text-[#666666]">English</span>
+                      <span className="mx-1.5 text-[#E0758A]">•</span>
+                      <span className="text-xs text-[#666666]">Nativo</span>
                     </div>
-                    <div>
-                      <p className="text-xs md:text-sm text-[#888888]">2010 - 2014</p>
-                      <p className="text-xs md:text-sm text-[#333333]">Stanford University</p>
-                      <p className="text-xs md:text-sm text-[#555555]">Bachelor of Arts in Architecture</p>
+                    <div className="flex items-center">
+                      <span className="text-xs text-[#666666]">Spanish</span>
+                      <span className="mx-1.5 text-[#E0758A]">•</span>
+                      <span className="text-xs text-[#666666]">Fluente</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-xs text-[#666666]">French</span>
+                      <span className="mx-1.5 text-[#E0758A]">•</span>
+                      <span className="text-xs text-[#666666]">Intermediário</span>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Right Column */}
-              <div className="col-span-12 md:col-span-7 space-y-4 md:space-y-6 lg:space-y-8 overflow-hidden">
-                {/* Experience Section */}
-                <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-light text-[#333333]">EXPERIÊNCIA</h2>
-                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
-                  <div className="space-y-3 md:space-y-4">
-                    <div>
-                      <div className="flex justify-between items-baseline">
-                        <h3 className="text-xs md:text-sm font-light text-[#333333]">Foster + Partners</h3>
-                        <span className="text-xs md:text-sm text-[#888888]">36 months</span>
+              
+              {/* Área principal direita (65-70%) */}
+              <div className="w-full md:w-[65%] h-full md:min-h-full p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
+                {/* Experiência - com timeline */}
+                <div className="mb-5 md:mb-6">
+                  <h2 className="text-sm uppercase font-light tracking-wider text-[#1A1A1A] border-b border-[#E0758A] pb-2 mb-4">Experiência Profissional</h2>
+                  
+                  <div className="relative pl-5 space-y-4 md:space-y-5 before:absolute before:top-2 before:bottom-2 before:left-0 before:w-[1px] before:bg-[#E5E0DB]">
+                    <div className="relative">
+                      <div className="absolute top-0 left-[-21px] w-4 h-4 rounded-full bg-white border border-[#E0758A]"></div>
+                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <h3 className="text-sm font-medium text-[#1A1A1A]">Foster + Partners</h3>
+                        <div className="flex items-center mt-1 sm:mt-0">
+                          <span className="text-xs text-[#666666] mr-1.5">2020 - 2023</span>
+                          <span className="inline-block px-1.5 py-0.5 bg-[#F5C0CB] text-[#1A1A1A] text-[10px] rounded">3 anos</span>
+                        </div>
                       </div>
-                      <p className="text-xs md:text-sm text-[#555555] italic">Senior Architect / Project Lead</p>
-                      <ul className="mt-1 md:mt-2 space-y-0.5 md:space-y-1 text-xs md:text-sm text-[#555555]">
+                      <p className="text-xs text-[#E0758A] italic mb-1">Senior Architect / Project Lead</p>
+                      <ul className="space-y-0.5 list-disc list-inside text-xs text-[#666666]">
                         <li>Led design teams for major commercial projects in Asia and Europe</li>
                         <li>Developed sustainable design strategies for LEED certification</li>
-                        <li>Managed client relationships and project presentations</li>
                       </ul>
                     </div>
-                    <div>
-                      <div className="flex justify-between items-baseline">
-                        <h3 className="text-xs md:text-sm font-light text-[#333333]">Gensler</h3>
-                        <span className="text-xs md:text-sm text-[#888888]">24 months</span>
+                    
+                    <div className="relative">
+                      <div className="absolute top-0 left-[-21px] w-4 h-4 rounded-full bg-white border border-[#E0758A]"></div>
+                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <h3 className="text-sm font-medium text-[#1A1A1A]">Gensler</h3>
+                        <div className="flex items-center mt-1 sm:mt-0">
+                          <span className="text-xs text-[#666666] mr-1.5">2018 - 2020</span>
+                          <span className="inline-block px-1.5 py-0.5 bg-[#F5C0CB] text-[#1A1A1A] text-[10px] rounded">2 anos</span>
+                        </div>
                       </div>
-                      <p className="text-xs md:text-sm text-[#555555] italic">Project Architect</p>
-                      <ul className="mt-1 md:mt-2 space-y-0.5 md:space-y-1 text-xs md:text-sm text-[#555555]">
+                      <p className="text-xs text-[#E0758A] italic mb-1">Project Architect</p>
+                      <ul className="space-y-0.5 list-disc list-inside text-xs text-[#666666]">
                         <li>Designed and coordinated residential and commercial projects</li>
                         <li>Collaborated with engineers and contractors</li>
-                        <li>Prepared construction documents and specifications</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-
-                {/* Languages Section */}
-                <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-light text-[#333333]">IDIOMAS</h2>
-                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
-                  <div className="space-y-1 md:space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs md:text-sm text-[#333333]">English</span>
-                      <span className="text-xs md:text-sm text-[#555555]">Native</span>
+                
+                {/* Educação */}
+                <div className="mb-5 md:mb-6">
+                  <h2 className="text-sm uppercase font-light tracking-wider text-[#1A1A1A] border-b border-[#E0758A] pb-2 mb-4">Educação</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="border-l-2 border-[#E0758A] pl-3 py-0.5 hover:border-[#F5C0CB] transition-colors duration-300">
+                      <div className="mb-1">
+                        <h3 className="text-sm font-medium text-[#1A1A1A]">Master of Architecture</h3>
+                      </div>
+                      <p className="text-xs text-[#666666] mb-0.5">University of California, Berkeley</p>
+                      <p className="text-xs text-[#E0758A]">2014 - 2018</p>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs md:text-sm text-[#333333]">Spanish</span>
-                      <span className="text-xs md:text-sm text-[#555555]">Fluent</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs md:text-sm text-[#333333]">French</span>
-                      <span className="text-xs md:text-sm text-[#555555]">Intermediate</span>
+                    
+                    <div className="border-l-2 border-[#E0758A] pl-3 py-0.5 hover:border-[#F5C0CB] transition-colors duration-300">
+                      <div className="mb-1">
+                        <h3 className="text-sm font-medium text-[#1A1A1A]">Bachelor of Arts in Architecture</h3>
+                      </div>
+                      <p className="text-xs text-[#666666] mb-0.5">Stanford University</p>
+                      <p className="text-xs text-[#E0758A]">2010 - 2014</p>
                     </div>
                   </div>
                 </div>
-
-                {/* Software Skills Section - mostrar apenas em telas maiores */}
-                <div className="space-y-2 md:space-y-3 hidden md:block">
-                  <h2 className="text-lg md:text-xl font-light text-[#333333]">SOFTWARE</h2>
-                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-4">
+                
+                {/* Software Skills - Visual Grid */}
+                <div>
+                  <h2 className="text-sm uppercase font-light tracking-wider text-[#1A1A1A] border-b border-[#E0758A] pb-2 mb-4">Habilidades de Software</h2>
+                  
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-x-3 gap-y-4">
                     {[
-                      'AutoCAD', 'Revit', 'SketchUp', '3ds Max', 'V-Ray', 
-                      'Photoshop', 'Illustrator', 'InDesign', 'Rhino', 'Lumion', 'ArchiCAD'
-                    ].slice(0, isMobile ? 6 : 11).map((software) => (
-                      <div key={software} className="flex flex-col items-center">
-                        <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-[#dddddd] flex items-center justify-center">
-                          <span className="text-[10px] md:text-xs text-[#888888]">{software.slice(0, 2)}</span>
+                      {name: 'AutoCAD', icon: 'A'},
+                      {name: 'Revit', icon: 'R'},
+                      {name: 'SketchUp', icon: 'S'},
+                      {name: '3ds Max', icon: '3D'},
+                      {name: 'V-Ray', icon: 'V'},
+                      {name: 'Photoshop', icon: 'Ps'},
+                      {name: 'Illustrator', icon: 'Ai'},
+                      {name: 'InDesign', icon: 'Id'},
+                      {name: 'Rhino', icon: 'Rh'},
+                      {name: 'Lumion', icon: 'Lu'},
+                      {name: 'ArchiCAD', icon: 'AC'}
+                    ].map((software) => (
+                      <div key={software.name} className="group flex flex-col items-center">
+                        {/* Ícone com design minimalista arquitetônico */}
+                        <div className="w-12 h-12 bg-white border border-[#E0758A] flex items-center justify-center mb-2 group-hover:border-[#F5C0CB] transition-all duration-300 relative overflow-hidden shadow-sm">
+                          {/* Fundo sutilmente texturizado */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-white to-[#FBF9F7] opacity-80"></div>
+                          
+                          {/* Linhas arquitetônicas */}
+                          <div className="absolute h-full w-[1px] bg-[#F5C0CB] left-0"></div>
+                          <div className="absolute h-full w-[1px] bg-[#F5C0CB] right-0"></div>
+                          <div className="absolute w-full h-[1px] bg-[#F5C0CB] top-0"></div>
+                          <div className="absolute w-full h-[1px] bg-[#F5C0CB] bottom-0"></div>
+                          
+                          {/* Elemento de destaque no canto */}
+                          <div className="absolute top-0 right-0 w-4 h-4 bg-[#F5C0CB] transform rotate-45 translate-x-2 -translate-y-2 border-b border-l border-[#E0758A]"></div>
+                          
+                          {/* Conteúdo do ícone */}
+                          <span className="relative text-sm font-medium text-[#1A1A1A] tracking-wide group-hover:text-[#E0758A] transition-colors duration-300">{software.icon}</span>
                         </div>
-                        <span className="text-[10px] md:text-xs text-[#888888] mt-1">{software}</span>
+                        
+                        {/* Nome do software */}
+                        <span className="text-[10px] font-light text-[#666666] text-center">{software.name}</span>
                       </div>
                     ))}
                   </div>
@@ -302,12 +369,16 @@ function App() {
         )}
       </AnimatePresence>
 
-      <Navigation 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onNavigate={handleNavigate}
-        onNavigateToPage={handleNavigateToPage}
-      />
+      {/* Renderizar a navegação apenas se não estiver na página de capa */}
+      {currentPage !== 0 && (
+        <Navigation 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onNavigate={handleNavigate}
+          onNavigateToPage={handleNavigateToPage}
+          pageTitles={pageTitles}
+        />
+      )}
     </div>
   );
 }

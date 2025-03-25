@@ -374,7 +374,7 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
           margin: "0 auto",
           padding: "0 1.5rem",
         }}>
-          <p style={{ color: "#888888" }}>© 2023 Sofia Martinez Arquitetura</p>
+          <p style={{ color: "#888888" }}>© 2023 Emanuelle de Andrade Arquitetura</p>
           <button 
             onClick={onBack}
             style={{

@@ -23,9 +23,9 @@ export const ProjectPage: React.FC<{
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className="text-2xl md:text-3xl font-light text-[#333333] tracking-wide">{project.title}</h2>
-          <p className="text-[#888888] mt-2 font-light">{project.year} • {project.location}</p>
-          <div className="w-full h-[1px] bg-[#dddddd] mt-3"></div>
+          <h2 className="text-2xl md:text-3xl font-light text-[#1A1A1A] tracking-wide">{project.title}</h2>
+          <p className="text-[#666666] mt-2 font-light">{project.year} • {project.location}</p>
+          <div className="w-full h-[1px] bg-[#E5E0DB] mt-3"></div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 flex-grow overflow-hidden pb-16">
@@ -47,7 +47,7 @@ export const ProjectPage: React.FC<{
             <div className="flex flex-col space-y-1.5">
               {/* Indicador de posição acima das miniaturas */}
               <div className="flex justify-end">
-                <span className="text-xs text-[#888888] font-light">
+                <span className="text-xs text-[#666666] font-light">
                   {currentImageIndex + 1}/{Math.min(project.images.length, 4)}
                 </span>
               </div>
@@ -59,8 +59,8 @@ export const ProjectPage: React.FC<{
                     key={index} 
                     className={`relative h-[80px] cursor-pointer overflow-hidden
                       ${currentImageIndex === index 
-                        ? 'ring-1 ring-[#333333]' 
-                        : 'ring-1 ring-[#dddddd]'}`}
+                        ? 'ring-1 ring-[#E0758A]' 
+                        : 'ring-1 ring-[#E5E0DB]'}`}
                     onClick={() => handleImageClick(index)}
                   >
                     <img
@@ -83,37 +83,37 @@ export const ProjectPage: React.FC<{
           >
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-light text-[#333333] mb-3">Sobre o projeto</h3>
-                <div className="w-full h-[1px] bg-[#dddddd] mb-4"></div>
-                <p className="text-[#555555] leading-relaxed font-light text-sm">{project.description}</p>
+                <h3 className="text-lg font-light text-[#1A1A1A] mb-3">Sobre o projeto</h3>
+                <div className="w-full h-[1px] bg-[#E5E0DB] mb-4"></div>
+                <p className="text-[#666666] leading-relaxed font-light text-sm">{project.description}</p>
               </div>
               
               <div>
-                <h3 className="text-lg font-light text-[#333333] mb-3">Especificações</h3>
-                <div className="w-full h-[1px] bg-[#dddddd] mb-4"></div>
+                <h3 className="text-lg font-light text-[#1A1A1A] mb-3">Especificações</h3>
+                <div className="w-full h-[1px] bg-[#E5E0DB] mb-4"></div>
                 <ul className="space-y-3">
                   {project.projectType && (
-                    <li className="border-b border-[#eeeeee] pb-3">
-                      <span className="text-[#888888] font-light text-sm block mb-1">Tipo de Projeto</span>
-                      <span className="text-[#555555] font-light">{project.projectType}</span>
+                    <li className="border-b border-[#E5E0DB] pb-3">
+                      <span className="text-[#666666] font-light text-sm block mb-1">Tipo de Projeto</span>
+                      <span className="text-[#1A1A1A] font-light">{project.projectType}</span>
                     </li>
                   )}
                   {project.area && (
-                    <li className="border-b border-[#eeeeee] pb-3">
-                      <span className="text-[#888888] font-light text-sm block mb-1">Área</span>
-                      <span className="text-[#555555] font-light">{project.area}</span>
+                    <li className="border-b border-[#E5E0DB] pb-3">
+                      <span className="text-[#666666] font-light text-sm block mb-1">Área</span>
+                      <span className="text-[#1A1A1A] font-light">{project.area}</span>
                     </li>
                   )}
                   {project.status && (
-                    <li className="border-b border-[#eeeeee] pb-3">
-                      <span className="text-[#888888] font-light text-sm block mb-1">Status</span>
-                      <span className="text-[#555555] font-light">{project.status}</span>
+                    <li className="border-b border-[#E5E0DB] pb-3">
+                      <span className="text-[#666666] font-light text-sm block mb-1">Status</span>
+                      <span className="text-[#1A1A1A] font-light">{project.status}</span>
                     </li>
                   )}
                   {project.sustainability && (
-                    <li className="border-b border-[#eeeeee] pb-3">
-                      <span className="text-[#888888] font-light text-sm block mb-1">Sustentabilidade</span>
-                      <span className="text-[#555555] font-light">{project.sustainability}</span>
+                    <li className="border-b border-[#E5E0DB] pb-3">
+                      <span className="text-[#666666] font-light text-sm block mb-1">Sustentabilidade</span>
+                      <span className="text-[#1A1A1A] font-light">{project.sustainability}</span>
                     </li>
                   )}
                 </ul>
@@ -124,7 +124,7 @@ export const ProjectPage: React.FC<{
                   <button
                     onClick={() => onViewFullProject(project.id)}
                     aria-label="Ver projeto completo"
-                    className="group border border-[#333333] text-[#333333] hover:bg-[rgba(0,0,0,0.05)] transition-all duration-300 px-5 py-2 rounded-full text-sm font-light flex items-center"
+                    className="group border border-[#E0758A] bg-[#E0758A] text-white hover:bg-[#F5C0CB] hover:border-[#F5C0CB] hover:text-[#1A1A1A] transition-all duration-300 px-5 py-2 rounded-full text-sm font-light flex items-center"
                   >
                     <span>Ver projeto completo</span>
                     <ExternalLink className="h-3 w-3 ml-2 transition-transform duration-300 group-hover:translate-x-0.5" />

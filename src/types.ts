@@ -23,4 +23,5 @@ export interface NavigationProps {
   totalPages: number;
   onNavigate: (direction: 'prev' | 'next') => void;
   onNavigateToPage?: (pageIndex: number) => void;
+  pageTitles?: string[];
 }
