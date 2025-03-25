@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+  
+  body {
+    @apply bg-white text-gray-900;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+  }
+
+  /* Estado especial quando estamos visualizando detalhes do projeto */
+  body.viewing-project-detail {
+    overflow: auto !important;
+    position: relative !important;
+    height: auto !important;
+  }
+
+  /* Permitir scroll apenas para o FullProjectView */
+  .overflow-y-auto {
+    overflow-y: auto !important;
+  }
+  
+  /* Classe específica para a página de detalhes do projeto */
+  .project-detail-view {
+    overflow-y: auto !important;
+  }
+}
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Estilizando a scrollbar para todos os elementos com scroll */
+.overflow-y-auto,
+body.viewing-project-detail,
+.project-detail-view {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E0 transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar,
+body.viewing-project-detail::-webkit-scrollbar,
+.project-detail-view::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track,
+body.viewing-project-detail::-webkit-scrollbar-track,
+.project-detail-view::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb,
+body.viewing-project-detail::-webkit-scrollbar-thumb,
+.project-detail-view::-webkit-scrollbar-thumb {
+  background-color: #CBD5E0;
+  border-radius: 3px;
+}
+
+/* Media queries para dispositivos móveis */
+@media (max-width: 767px) {
+  .h-screen {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+}
+
+/* Adicionar script para ajustar altura em dispositivos móveis */
+@media screen and (max-width: 767px) {
+  :root {
+    --vh: calc(1vh);
+  }
+}
