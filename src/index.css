@@ -2,37 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400&display=swap');
+
 @layer base {
   html {
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Helvetica Neue", Arial, sans-serif;
     overflow: hidden;
     height: 100%;
     width: 100%;
   }
   
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-white text-[#333333];
     height: 100%;
     width: 100%;
     overflow: hidden;
     position: fixed;
+    font-weight: 300;
+    letter-spacing: 0.2px;
   }
 
-  /* Estado especial quando estamos visualizando detalhes do projeto */
-  body.viewing-project-detail {
-    overflow: auto !important;
-    position: relative !important;
-    height: auto !important;
+  /* Definições para layout em livro (sem scroll) */
+  body.book-layout {
+    overflow: hidden !important;
+    position: fixed !important;
+    height: 100% !important;
+    width: 100% !important;
   }
 
-  /* Permitir scroll apenas para o FullProjectView */
-  .overflow-y-auto {
-    overflow-y: auto !important;
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
   
-  /* Classe específica para a página de detalhes do projeto */
-  .project-detail-view {
-    overflow-y: auto !important;
+  /* Estilos padrão para botões */
+  button {
+    transition: all 0.3s ease;
+  }
+
+  /* Estilos padrão para imagens */
+  img {
+    @apply select-none;
+  }
+  
+  /* Estilo para o container do projeto detalhado */
+  #project-detail-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+    background-color: white !important;
+    z-index: 9999 !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Footer de navegação */
+  .navigation-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: white;
+    border-top: 1px solid #eeeeee;
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Botões de navegação circular */
+  .nav-btn-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dddddd;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-btn-circle:hover {
+    border-color: #333333;
   }
 }
 
@@ -50,32 +107,37 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .btn-project {
+    @apply border border-[#333333] text-[#333333] px-5 py-2 rounded-full text-sm font-light transition-all duration-300;
+  }
+
+  .btn-project:hover {
+    @apply bg-[rgba(0,0,0,0.05)];
+  }
+  
+  /* Espaço para o footer */
+  .pb-footer {
+    padding-bottom: 70px;
+  }
 }
 
-/* Estilizando a scrollbar para todos os elementos com scroll */
-.overflow-y-auto,
-body.viewing-project-detail,
-.project-detail-view {
+/* Estilizando a scrollbar para elementos com scroll */
+#project-detail-container {
   scrollbar-width: thin;
-  scrollbar-color: #CBD5E0 transparent;
+  scrollbar-color: #dddddd transparent;
 }
 
-.overflow-y-auto::-webkit-scrollbar,
-body.viewing-project-detail::-webkit-scrollbar,
-.project-detail-view::-webkit-scrollbar {
-  width: 6px;
+#project-detail-container::-webkit-scrollbar {
+  width: 4px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-track,
-body.viewing-project-detail::-webkit-scrollbar-track,
-.project-detail-view::-webkit-scrollbar-track {
+#project-detail-container::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb,
-body.viewing-project-detail::-webkit-scrollbar-thumb,
-.project-detail-view::-webkit-scrollbar-thumb {
-  background-color: #CBD5E0;
+#project-detail-container::-webkit-scrollbar-thumb {
+  background-color: #dddddd;
   border-radius: 3px;
 }
 
@@ -84,6 +146,11 @@ body.viewing-project-detail::-webkit-scrollbar-thumb,
   .h-screen {
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
+  }
+
+  /* Layout vertical em telas menores */
+  .grid-cols-12 {
+    grid-template-columns: 1fr;
   }
 }
 

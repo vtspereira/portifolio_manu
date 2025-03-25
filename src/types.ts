@@ -22,7 +22,5 @@ export interface NavigationProps {
   currentPage: number;
   totalPages: number;
   onNavigate: (direction: 'prev' | 'next') => void;
-  onViewFullProject?: (projectId: number) => void;
-  currentProjectId?: number;
   onNavigateToPage?: (pageIndex: number) => void;
 }

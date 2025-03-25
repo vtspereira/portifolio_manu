@@ -9,135 +9,241 @@ interface FullProjectViewProps {
 }
 
 export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBack }) => {
-  // Scroll para o topo quando o componente é montado
   useEffect(() => {
+    // Forçar scroll para o topo quando o componente é montado
     window.scrollTo(0, 0);
+    
+    // Ajustar o body e html diretamente com estilos forçados
+    document.body.style.overflow = "auto";
+    document.body.style.position = "static";
+    document.body.style.height = "auto";
+    document.body.style.minHeight = "100vh";
+    document.body.style.display = "block";
+    document.body.style.visibility = "visible";
+    
+    document.documentElement.style.overflow = "auto";
+    document.documentElement.style.height = "auto";
+    document.documentElement.style.position = "relative";
+    
+    // Remover classes que possam estar causando conflitos
+    document.body.classList.remove('book-layout');
+    document.body.classList.add('viewing-project-detail');
+    
+    return () => {
+      // Restaurar valores originais ao desmontar
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.height = "";
+      document.body.style.minHeight = "";
+      document.body.style.display = "";
+      document.body.style.visibility = "";
+      
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
+      document.documentElement.style.position = "";
+      
+      document.body.classList.remove('viewing-project-detail');
+      document.body.classList.add('book-layout');
+    };
   }, []);
 
+  if (!project) {
+    return <div>Carregando projeto...</div>;
+  }
+
   return (
-    <div className="bg-white min-h-screen project-detail-view">
-      <header className="sticky top-0 bg-white bg-opacity-90 backdrop-blur-sm z-50 border-b border-gray-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div 
+      style={{
+        backgroundColor: "white",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100%",
+        minHeight: "100vh",
+        overflowY: "auto",
+        overflowX: "hidden",
+        zIndex: 9999,
+        visibility: "visible",
+        display: "block"
+      }}
+    >
+      <header style={{
+        position: "sticky",
+        top: 0,
+        backgroundColor: "rgba(255,255,255,0.95)",
+        backdropFilter: "blur(8px)",
+        zIndex: 50,
+        borderBottom: "1px solid #eeeeee",
+        padding: "1.5rem 0"
+      }}>
+        <div style={{
+          maxWidth: "72rem",
+          margin: "0 auto",
+          padding: "0 1.5rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
           <button 
             onClick={onBack}
-            className="group flex items-center text-gray-700 hover:text-[#5a8bb0] transition-colors gap-2"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              color: "#333333",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: 300
+            }}
           >
-            <ArrowLeft size={18} className="transition-transform duration-300 group-hover:-translate-x-1" />
-            <span className="font-light">Voltar aos projetos</span>
+            <ArrowLeft size={18} />
+            <span>Voltar</span>
           </button>
-          <h1 className="text-2xl font-light text-[#2c3e50]">{project.title}</h1>
+          <h1 style={{
+            fontSize: "1.25rem",
+            fontWeight: 300,
+            color: "#333333",
+            letterSpacing: "0.5px"
+          }}>{project.title}</h1>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
+      <main style={{
+        maxWidth: "72rem",
+        margin: "0 auto",
+        padding: "4rem 1.5rem"
+      }}>
         {/* Hero Section */}
-        <section className="mb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <section style={{ marginBottom: "6rem" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "4rem",
+            alignItems: "start"
+          }}>
             <div>
-              <motion.h2 
-                className="text-4xl font-light mb-4 text-[#2c3e50]"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
+              <h2 style={{
+                fontSize: "1.875rem",
+                fontWeight: 300,
+                marginBottom: "1rem",
+                color: "#333333"
+              }}>
                 {project.title}
-              </motion.h2>
-              <motion.div 
-                className="flex items-center gap-2 mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <MapPin size={16} className="text-[#5a8bb0]" />
-                <span className="text-gray-500 font-light">{project.location}</span>
-                <span className="mx-2 text-gray-300">•</span>
-                <Calendar size={16} className="text-[#5a8bb0]" />
-                <span className="text-gray-500 font-light">{project.year}</span>
-              </motion.div>
-              <motion.p 
-                className="text-gray-700 leading-relaxed mb-8 font-light"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
+              </h2>
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginBottom: "1.5rem"
+              }}>
+                <MapPin size={16} style={{ color: "#888888" }} />
+                <span style={{ color: "#888888", fontWeight: 300 }}>{project.location}</span>
+                <span style={{ margin: "0 0.5rem", color: "#dddddd" }}>•</span>
+                <Calendar size={16} style={{ color: "#888888" }} />
+                <span style={{ color: "#888888", fontWeight: 300 }}>{project.year}</span>
+              </div>
+              <div style={{
+                width: "60px",
+                height: "2px",
+                backgroundColor: "#333333",
+                marginBottom: "2rem"
+              }}></div>
+              <p style={{
+                color: "#555555",
+                lineHeight: 1.7,
+                marginBottom: "3rem",
+                fontWeight: 300
+              }}>
                 {project.description}
-              </motion.p>
-              <motion.div 
-                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
+              </p>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gap: "1.5rem"
+              }}>
                 {project.projectType && (
-                  <div className="bg-gray-50 p-4 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-                    <Tag size={16} className="text-[#5a8bb0] mb-2" />
-                    <p className="text-xs text-gray-500 font-light">Tipo de Projeto</p>
-                    <p className="text-sm text-gray-700">{project.projectType}</p>
+                  <div style={{ borderBottom: "1px solid #eeeeee", paddingBottom: "1rem" }}>
+                    <Tag size={16} style={{ color: "#888888", marginBottom: "0.5rem" }} />
+                    <p style={{ color: "#888888", fontWeight: 300, fontSize: "0.75rem" }}>Tipo de Projeto</p>
+                    <p style={{ color: "#333333", fontSize: "0.875rem" }}>{project.projectType}</p>
                   </div>
                 )}
                 {project.area && (
-                  <div className="bg-gray-50 p-4 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-                    <Ruler size={16} className="text-[#5a8bb0] mb-2" />
-                    <p className="text-xs text-gray-500 font-light">Área Construída</p>
-                    <p className="text-sm text-gray-700">{project.area}</p>
+                  <div style={{ borderBottom: "1px solid #eeeeee", paddingBottom: "1rem" }}>
+                    <Ruler size={16} style={{ color: "#888888", marginBottom: "0.5rem" }} />
+                    <p style={{ color: "#888888", fontWeight: 300, fontSize: "0.75rem" }}>Área</p>
+                    <p style={{ color: "#333333", fontSize: "0.875rem" }}>{project.area}</p>
                   </div>
                 )}
                 {project.status && (
-                  <div className="bg-gray-50 p-4 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-                    <Activity size={16} className="text-[#5a8bb0] mb-2" />
-                    <p className="text-xs text-gray-500 font-light">Status</p>
-                    <p className="text-sm text-gray-700">{project.status}</p>
+                  <div style={{ borderBottom: "1px solid #eeeeee", paddingBottom: "1rem" }}>
+                    <Activity size={16} style={{ color: "#888888", marginBottom: "0.5rem" }} />
+                    <p style={{ color: "#888888", fontWeight: 300, fontSize: "0.75rem" }}>Status</p>
+                    <p style={{ color: "#333333", fontSize: "0.875rem" }}>{project.status}</p>
                   </div>
                 )}
                 {project.sustainability && (
-                  <div className="bg-gray-50 p-4 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-                    <Ruler size={16} className="text-[#5a8bb0] mb-2" />
-                    <p className="text-xs text-gray-500 font-light">Sustentabilidade</p>
-                    <p className="text-sm text-gray-700">{project.sustainability}</p>
+                  <div style={{ borderBottom: "1px solid #eeeeee", paddingBottom: "1rem" }}>
+                    <Ruler size={16} style={{ color: "#888888", marginBottom: "0.5rem" }} />
+                    <p style={{ color: "#888888", fontWeight: 300, fontSize: "0.75rem" }}>Sustentabilidade</p>
+                    <p style={{ color: "#333333", fontSize: "0.875rem" }}>{project.sustainability}</p>
                   </div>
                 )}
-              </motion.div>
+              </div>
             </div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="group overflow-hidden rounded shadow-lg"
-            >
+            <div style={{ overflow: "hidden" }}>
               <img 
                 src={project.images[0]} 
                 alt={project.title}
-                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" 
+                style={{ 
+                  width: "100%", 
+                  height: "auto", 
+                  objectFit: "cover"
+                }}
               />
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Concept Section */}
         {project.designProcess && (
-          <section className="mb-20">
-            <h3 className="text-2xl font-light mb-8 text-[#5a8bb0]">Processo de Design</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <section style={{ marginBottom: "6rem" }}>
+            <h3 style={{ 
+              fontSize: "1.5rem", 
+              fontWeight: 300, 
+              marginBottom: "2.5rem", 
+              color: "#333333" 
+            }}>Processo de Design</h3>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "4rem",
+              alignItems: "start"
+            }}>
               <div>
-                <p className="text-gray-700 leading-relaxed font-light">
+                <p style={{ color: "#555555", lineHeight: 1.7, fontWeight: 300 }}>
                   {project.designProcess}
                 </p>
-                <p className="text-gray-700 leading-relaxed mt-6 font-light">
+                <p style={{ color: "#555555", lineHeight: 1.7, marginTop: "1.5rem", fontWeight: 300 }}>
                   A abordagem do projeto inclui análise cuidadosa do contexto, estudos de insolação e ventilação, e a busca por criar espaços que proporcionem experiências memoráveis.
                 </p>
-                <p className="text-gray-700 leading-relaxed mt-6 font-light">
+                <p style={{ color: "#555555", lineHeight: 1.7, marginTop: "1.5rem", fontWeight: 300 }}>
                   O conceito arquitetônico valoriza a relação entre os espaços internos e externos, criando uma sequência de ambientes que dialogam com o entorno e proporcionam diferentes percepções para os usuários.
                 </p>
               </div>
               {project.technicalDiagram && (
                 <div>
-                  <div className="group overflow-hidden rounded shadow-lg">
+                  <div style={{ overflow: "hidden" }}>
                     <img 
                       src={project.technicalDiagram} 
                       alt={`${project.title} - Diagrama técnico`}
-                      className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" 
+                      style={{ width: "100%", height: "auto", objectFit: "cover" }}
                     />
                   </div>
-                  <p className="text-sm text-gray-500 mt-3 font-light">Diagrama conceitual do projeto</p>
+                  <p style={{ color: "#888888", marginTop: "0.75rem", fontSize: "0.875rem", fontWeight: 300 }}>Diagrama conceitual do projeto</p>
                 </div>
               )}
             </div>
@@ -145,99 +251,111 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
         )}
 
         {/* Gallery Section */}
-        <section className="mb-20">
-          <h3 className="text-2xl font-light mb-8 text-[#5a8bb0]">Galeria de Imagens</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section style={{ marginBottom: "6rem" }}>
+          <h3 style={{ 
+            fontSize: "1.5rem", 
+            fontWeight: 300, 
+            marginBottom: "2.5rem", 
+            color: "#333333" 
+          }}>Galeria de Imagens</h3>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "2.5rem"
+          }}>
             {project.images.map((image, index) => (
-              <motion.div
-                key={index}
-                className="group overflow-hidden rounded shadow-lg"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-              >
+              <div key={index} style={{ overflow: "hidden" }}>
                 <img 
                   src={image} 
                   alt={`${project.title} - Imagem ${index + 1}`}
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" 
+                  style={{ width: "100%", height: "auto", objectFit: "cover" }}
                 />
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
 
         {/* Additional Details Section */}
-        <section className="mb-20">
-          <h3 className="text-2xl font-light mb-8 text-[#5a8bb0]">Detalhes do Projeto</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-6 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-              <h4 className="font-medium mb-4 text-[#2c3e50]">Materiais</h4>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Concreto aparente</span>
+        <section style={{ marginBottom: "6rem" }}>
+          <h3 style={{ 
+            fontSize: "1.5rem", 
+            fontWeight: 300, 
+            marginBottom: "2.5rem", 
+            color: "#333333" 
+          }}>Detalhes do Projeto</h3>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "2.5rem"
+          }}>
+            <div style={{ borderTop: "1px solid #eeeeee", paddingTop: "1.5rem" }}>
+              <h4 style={{ fontWeight: 300, fontSize: "1.25rem", marginBottom: "1.5rem", color: "#333333" }}>Materiais</h4>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Concreto aparente</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Madeira certificada</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Madeira certificada</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Vidro temperado</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Vidro temperado</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Aço corten</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Aço corten</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Pedra natural local</span>
-                </li>
-              </ul>
-            </div>
-            <div className="bg-gray-50 p-6 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-              <h4 className="font-medium mb-4 text-[#2c3e50]">Métodos Construtivos</h4>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Estrutura em concreto armado</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Técnicas de baixo impacto ambiental</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Painéis pré-fabricados</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Montagem modular</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Pedra natural local</span>
                 </li>
               </ul>
             </div>
-            <div className="bg-gray-50 p-6 rounded shadow-sm transition-all duration-300 hover:shadow hover:bg-gray-100">
-              <h4 className="font-medium mb-4 text-[#2c3e50]">Soluções Sustentáveis</h4>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Captação de água pluvial</span>
+            <div style={{ borderTop: "1px solid #eeeeee", paddingTop: "1.5rem" }}>
+              <h4 style={{ fontWeight: 300, fontSize: "1.25rem", marginBottom: "1.5rem", color: "#333333" }}>Métodos Construtivos</h4>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Estrutura em concreto armado</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Painéis solares fotovoltaicos</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Técnicas de baixo impacto ambiental</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Ventilação natural cruzada</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Painéis pré-fabricados</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Telhado verde</span>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Montagem modular</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5a8bb0]">•</span>
-                  <span className="font-light text-gray-700">Gestão de resíduos</span>
+              </ul>
+            </div>
+            <div style={{ borderTop: "1px solid #eeeeee", paddingTop: "1.5rem" }}>
+              <h4 style={{ fontWeight: 300, fontSize: "1.25rem", marginBottom: "1.5rem", color: "#333333" }}>Soluções Sustentáveis</h4>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Captação de água pluvial</span>
+                </li>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Painéis solares fotovoltaicos</span>
+                </li>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Ventilação natural cruzada</span>
+                </li>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Telhado verde</span>
+                </li>
+                <li style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <span style={{ color: "#888888" }}>•</span>
+                  <span style={{ fontWeight: 300, color: "#555555" }}>Gestão de resíduos</span>
                 </li>
               </ul>
             </div>
@@ -245,12 +363,29 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
         </section>
       </main>
       
-      <footer className="bg-gray-50 py-8 mt-12">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-gray-600">© 2023 Sofia Martinez Arquitetura. Todos os direitos reservados.</p>
+      <footer style={{
+        padding: "2rem 0",
+        marginTop: "3rem",
+        borderTop: "1px solid #eeeeee",
+        textAlign: "center"
+      }}>
+        <div style={{
+          maxWidth: "72rem",
+          margin: "0 auto",
+          padding: "0 1.5rem",
+        }}>
+          <p style={{ color: "#888888" }}>© 2023 Sofia Martinez Arquitetura</p>
           <button 
             onClick={onBack}
-            className="mt-4 text-sm text-[#9C6868] hover:text-[#7A4F4F] transition-colors"
+            style={{
+              marginTop: "1rem",
+              fontSize: "0.875rem",
+              color: "#333333",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: 300
+            }}
           >
             Voltar para a galeria de projetos
           </button>

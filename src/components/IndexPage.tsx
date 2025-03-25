@@ -12,7 +12,7 @@ interface IndexPageProps {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
 const containerVariants = {
@@ -20,7 +20,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05
+      staggerChildren: 0.1
     }
   }
 };
@@ -30,22 +30,22 @@ export const IndexPage: React.FC<IndexPageProps> = ({
   onViewFullProject, 
   currentPage,
   onNavigateToPage,
-  totalPages = 9  // valor padrão caso não seja fornecido
+  totalPages
 }) => {
   return (
     <Page>
-      <div className="h-full flex flex-col py-4 md:py-6">
+      <div className="h-full flex flex-col py-6 md:py-10">
         <motion.h2 
-          className="text-2xl md:text-3xl lg:text-4xl font-light mb-6 md:mb-8 text-center text-[#2c3e50]"
+          className="text-2xl md:text-3xl font-light mb-12 md:mb-16 text-center text-[#333333] tracking-wide"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.4 }}
         >
-          Projects
+          Projetos
         </motion.h2>
         
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 lg:gap-12 flex-grow overflow-hidden"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 flex-grow overflow-hidden"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -53,44 +53,32 @@ export const IndexPage: React.FC<IndexPageProps> = ({
           {projects.map((project) => (
             <motion.div
               key={project.id}
-              className="flex flex-col items-center"
+              className="flex flex-col"
               variants={cardVariants}
             >
               <div 
-                className="group relative overflow-hidden cursor-pointer mb-2 md:mb-4 h-[25vh] w-full"
+                className="group relative overflow-hidden cursor-pointer mb-4 h-[280px] w-full"
                 onClick={() => onViewFullProject(project.id)}
               >
-                <div className="w-full h-full">
-                  <img
-                    src={project.images[0]}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] group-hover:blur-[1px]"
-                  />
-                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                </div>
+                <img
+                  src={project.images[0]}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03] group-hover:blur-[2px]"
+                />
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
               </div>
-              <a 
-                onClick={() => onViewFullProject(project.id)}
-                className="text-[#5a8bb0] hover:text-[#3d6c94] text-center cursor-pointer text-sm md:text-base font-light transition-colors"
-              >
-                {project.title}
-              </a>
+              <div className="mt-1">
+                <h3 
+                  className="text-[#333333] cursor-pointer text-base font-light mb-1 hover:text-[#888888] transition-colors duration-300"
+                  onClick={() => onViewFullProject(project.id)}
+                >
+                  {project.title}
+                </h3>
+                <p className="text-[#888888] text-sm font-light">{project.location}, {project.year}</p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
-
-        <div className="flex justify-center gap-2 mt-4 md:mt-6">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => onNavigateToPage(i)}
-              aria-label={`Ir para página ${i + 1}`}
-              title={`Página ${i + 1}`}
-              className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 hover:scale-125 
-                ${i === currentPage ? 'bg-black' : 'bg-gray-300 hover:bg-gray-400'}`}
-            />
-          ))}
-        </div>
       </div>
     </Page>
   );

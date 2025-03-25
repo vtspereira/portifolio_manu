@@ -33,19 +33,50 @@ function App() {
     };
   }, []);
 
-  // Toggle da classe no body para controlar o scroll quando estiver em visualização de projeto completo
+  // Aplicar as classes corretas logo no carregamento da página
   useEffect(() => {
-    if (viewingFullProject !== null) {
-      document.body.classList.add('viewing-project-detail');
-    } else {
-      document.body.classList.remove('viewing-project-detail');
+    // Por padrão, aplicar o modo livro
+    if (viewingFullProject === null) {
+      document.body.classList.add('book-layout');
+      document.documentElement.classList.remove('viewing-project-detail');
+      
+      // Reiniciar os estilos para o padrão sem scroll
+      document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.height = "100%";
     }
     
-    // Cleanup ao desmontar o componente
     return () => {
-      document.body.classList.remove('viewing-project-detail');
+      // Cleanup
+      document.body.classList.remove('book-layout');
     };
   }, [viewingFullProject]);
+
+  // Adicionar suporte para navegação com as teclas de seta
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Não capturar teclas se estiver em um elemento de formulário
+      if (
+        e.target instanceof HTMLInputElement || 
+        e.target instanceof HTMLTextAreaElement || 
+        e.target instanceof HTMLSelectElement ||
+        viewingFullProject !== null
+      ) {
+        return;
+      }
+
+      if (e.key === 'ArrowLeft') {
+        handleNavigate('prev');
+      } else if (e.key === 'ArrowRight') {
+        handleNavigate('next');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentPage, totalPages, viewingFullProject]);
 
   const handleNavigate = (direction: 'prev' | 'next') => {
     setCurrentPage(prev => 
@@ -63,39 +94,51 @@ function App() {
   };
 
   const handleViewFullProject = (projectId: number) => {
-    // Encontrar o projeto pelo ID
+    // Garantir que a página scrolle para o topo quando abrir o projeto completo
+    window.scrollTo(0, 0);
+    
+    // Atualizar o estado
     setViewingFullProject(projectId);
   };
 
   const handleBackFromFullProject = () => {
+    // Atualizar o estado
     setViewingFullProject(null);
-  };
-
-  // Obtém o ID do projeto atual (se estiver visualizando um projeto)
-  const getCurrentProjectId = () => {
-    if (currentPage >= 3) {
-      return projects[currentPage - 3].id;
-    }
-    return undefined;
   };
 
   // Se estiver visualizando um projeto completo, mostrar apenas esse componente
   if (viewingFullProject !== null) {
     const projectToShow = projects.find(p => p.id === viewingFullProject);
     if (projectToShow) {
-      return <FullProjectView project={projectToShow} onBack={handleBackFromFullProject} />;
+      // Usar um div adicional para garantir que o FullProjectView apareça
+      return (
+        <div id="project-detail-container" style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: "100%",
+          height: "100%",
+          overflow: "auto",
+          backgroundColor: "white",
+          zIndex: 9999
+        }}>
+          <FullProjectView project={projectToShow} onBack={handleBackFromFullProject} />
+        </div>
+      );
     }
   }
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
+    <div className="relative w-screen h-screen overflow-hidden pb-footer">
       <AnimatePresence mode="wait" initial={false}>
         {currentPage === 0 && (
-          <Page key="cover" className="bg-[#f8f8f8]">
+          <Page key="cover" className="bg-white">
             <div className="h-full flex flex-col items-center justify-center text-center">
-              <Compass className="w-12 h-12 md:w-16 md:h-16 mb-6 md:mb-8" />
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-3 md:mb-4">SOFIA MARTINEZ</h1>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600">ARCHITECTURAL PORTFOLIO</p>
+              <Compass className="w-12 h-12 md:w-16 md:h-16 mb-6 md:mb-8 text-[#333333]" />
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-3 md:mb-4 text-[#333333] tracking-wide">SOFIA MARTINEZ</h1>
+              <p className="text-base md:text-lg lg:text-xl text-[#888888] font-light">ARCHITECTURAL PORTFOLIO</p>
             </div>
           </Page>
         )}
@@ -105,36 +148,37 @@ function App() {
             <div className="h-full grid grid-cols-12 gap-4 md:gap-6 lg:gap-8 overflow-hidden">
               {/* Left Column */}
               <div className="col-span-12 md:col-span-5 space-y-4 md:space-y-6 lg:space-y-8">
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-light">sofia martinez</h1>
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-light text-[#333333] tracking-wide">sofia martinez</h1>
                 
                 {/* Contact Info */}
-                <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-gray-600">
+                <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-[#888888]">
                   <div className="flex items-center gap-2">
-                    <MapPin size={14} className="flex-shrink-0" />
+                    <MapPin size={14} className="flex-shrink-0 text-[#888888]" />
                     <span>San Francisco, CA</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail size={14} className="flex-shrink-0" />
+                    <Mail size={14} className="flex-shrink-0 text-[#888888]" />
                     <span>sofia.martinez@email.com</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Globe size={14} className="flex-shrink-0" />
+                    <Globe size={14} className="flex-shrink-0 text-[#888888]" />
                     <span>www.sofiamartinez.com</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Phone size={14} className="flex-shrink-0" />
+                    <Phone size={14} className="flex-shrink-0 text-[#888888]" />
                     <span>(555) 123-4567</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar size={14} className="flex-shrink-0" />
+                    <Calendar size={14} className="flex-shrink-0 text-[#888888]" />
                     <span>Born 1992</span>
                   </div>
                 </div>
 
                 {/* About Me Section */}
                 <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-medium text-[#9C6868]">ABOUT ME</h2>
-                  <p className="text-xs md:text-sm leading-relaxed text-gray-700 line-clamp-3 md:line-clamp-4">
+                  <h2 className="text-lg md:text-xl font-light text-[#333333]">SOBRE MIM</h2>
+                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
+                  <p className="text-xs md:text-sm leading-relaxed text-[#555555] line-clamp-3 md:line-clamp-4">
                     With over a decade of experience in architectural design, I specialize in creating 
                     spaces that harmoniously blend functionality with aesthetic beauty. My approach 
                     combines sustainable practices with innovative design solutions, ensuring each 
@@ -144,17 +188,18 @@ function App() {
 
                 {/* Education Section */}
                 <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-medium text-[#9C6868]">EDUCATION</h2>
+                  <h2 className="text-lg md:text-xl font-light text-[#333333]">EDUCAÇÃO</h2>
+                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
                   <div className="space-y-2 md:space-y-3">
                     <div>
-                      <p className="text-xs md:text-sm text-gray-500">2014 - 2018</p>
-                      <p className="text-xs md:text-sm">University of California, Berkeley</p>
-                      <p className="text-xs md:text-sm text-gray-600">Master of Architecture</p>
+                      <p className="text-xs md:text-sm text-[#888888]">2014 - 2018</p>
+                      <p className="text-xs md:text-sm text-[#333333]">University of California, Berkeley</p>
+                      <p className="text-xs md:text-sm text-[#555555]">Master of Architecture</p>
                     </div>
                     <div>
-                      <p className="text-xs md:text-sm text-gray-500">2010 - 2014</p>
-                      <p className="text-xs md:text-sm">Stanford University</p>
-                      <p className="text-xs md:text-sm text-gray-600">Bachelor of Arts in Architecture</p>
+                      <p className="text-xs md:text-sm text-[#888888]">2010 - 2014</p>
+                      <p className="text-xs md:text-sm text-[#333333]">Stanford University</p>
+                      <p className="text-xs md:text-sm text-[#555555]">Bachelor of Arts in Architecture</p>
                     </div>
                   </div>
                 </div>
@@ -164,15 +209,16 @@ function App() {
               <div className="col-span-12 md:col-span-7 space-y-4 md:space-y-6 lg:space-y-8 overflow-hidden">
                 {/* Experience Section */}
                 <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-medium text-[#9C6868]">EXPERIENCE</h2>
+                  <h2 className="text-lg md:text-xl font-light text-[#333333]">EXPERIÊNCIA</h2>
+                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
                   <div className="space-y-3 md:space-y-4">
                     <div>
                       <div className="flex justify-between items-baseline">
-                        <h3 className="text-xs md:text-sm font-medium">Foster + Partners</h3>
-                        <span className="text-xs md:text-sm text-gray-500">36 months</span>
+                        <h3 className="text-xs md:text-sm font-light text-[#333333]">Foster + Partners</h3>
+                        <span className="text-xs md:text-sm text-[#888888]">36 months</span>
                       </div>
-                      <p className="text-xs md:text-sm text-gray-600 italic">Senior Architect / Project Lead</p>
-                      <ul className="mt-1 md:mt-2 space-y-0.5 md:space-y-1 text-xs md:text-sm text-gray-700">
+                      <p className="text-xs md:text-sm text-[#555555] italic">Senior Architect / Project Lead</p>
+                      <ul className="mt-1 md:mt-2 space-y-0.5 md:space-y-1 text-xs md:text-sm text-[#555555]">
                         <li>Led design teams for major commercial projects in Asia and Europe</li>
                         <li>Developed sustainable design strategies for LEED certification</li>
                         <li>Managed client relationships and project presentations</li>
@@ -180,11 +226,11 @@ function App() {
                     </div>
                     <div>
                       <div className="flex justify-between items-baseline">
-                        <h3 className="text-xs md:text-sm font-medium">Gensler</h3>
-                        <span className="text-xs md:text-sm text-gray-500">24 months</span>
+                        <h3 className="text-xs md:text-sm font-light text-[#333333]">Gensler</h3>
+                        <span className="text-xs md:text-sm text-[#888888]">24 months</span>
                       </div>
-                      <p className="text-xs md:text-sm text-gray-600 italic">Project Architect</p>
-                      <ul className="mt-1 md:mt-2 space-y-0.5 md:space-y-1 text-xs md:text-sm text-gray-700">
+                      <p className="text-xs md:text-sm text-[#555555] italic">Project Architect</p>
+                      <ul className="mt-1 md:mt-2 space-y-0.5 md:space-y-1 text-xs md:text-sm text-[#555555]">
                         <li>Designed and coordinated residential and commercial projects</li>
                         <li>Collaborated with engineers and contractors</li>
                         <li>Prepared construction documents and specifications</li>
@@ -195,36 +241,38 @@ function App() {
 
                 {/* Languages Section */}
                 <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-lg md:text-xl font-medium text-[#9C6868]">LANGUAGES</h2>
+                  <h2 className="text-lg md:text-xl font-light text-[#333333]">IDIOMAS</h2>
+                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
                   <div className="space-y-1 md:space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs md:text-sm">English</span>
-                      <span className="text-xs md:text-sm text-gray-600">Native</span>
+                      <span className="text-xs md:text-sm text-[#333333]">English</span>
+                      <span className="text-xs md:text-sm text-[#555555]">Native</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs md:text-sm">Spanish</span>
-                      <span className="text-xs md:text-sm text-gray-600">Fluent</span>
+                      <span className="text-xs md:text-sm text-[#333333]">Spanish</span>
+                      <span className="text-xs md:text-sm text-[#555555]">Fluent</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs md:text-sm">French</span>
-                      <span className="text-xs md:text-sm text-gray-600">Intermediate</span>
+                      <span className="text-xs md:text-sm text-[#333333]">French</span>
+                      <span className="text-xs md:text-sm text-[#555555]">Intermediate</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Software Skills Section - mostrar apenas em telas maiores */}
                 <div className="space-y-2 md:space-y-3 hidden md:block">
-                  <h2 className="text-lg md:text-xl font-medium text-[#9C6868]">SOFTWARE PROFICIENCY</h2>
+                  <h2 className="text-lg md:text-xl font-light text-[#333333]">SOFTWARE</h2>
+                  <div className="w-[60px] h-[2px] bg-[#333333] mb-4"></div>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-4">
                     {[
                       'AutoCAD', 'Revit', 'SketchUp', '3ds Max', 'V-Ray', 
                       'Photoshop', 'Illustrator', 'InDesign', 'Rhino', 'Lumion', 'ArchiCAD'
                     ].slice(0, isMobile ? 6 : 11).map((software) => (
                       <div key={software} className="flex flex-col items-center">
-                        <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                          <span className="text-[10px] md:text-xs text-gray-600">{software.slice(0, 2)}</span>
+                        <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-[#dddddd] flex items-center justify-center">
+                          <span className="text-[10px] md:text-xs text-[#888888]">{software.slice(0, 2)}</span>
                         </div>
-                        <span className="text-[10px] md:text-xs text-gray-600 mt-1">{software}</span>
+                        <span className="text-[10px] md:text-xs text-[#888888] mt-1">{software}</span>
                       </div>
                     ))}
                   </div>
@@ -239,9 +287,9 @@ function App() {
             key="index" 
             projects={projects} 
             onViewFullProject={handleViewFullProject} 
-            currentPage={0} 
-            onNavigateToPage={handleNavigateToPage}
-            totalPages={9}
+            currentPage={currentPage - 2} 
+            onNavigateToPage={(index) => handleNavigateToPage(index + 3)}
+            totalPages={projects.length}
           />
         )}
 
@@ -249,6 +297,7 @@ function App() {
           <ProjectPage 
             key={`project-${currentPage}`} 
             project={projects[currentPage - 3]} 
+            onViewFullProject={handleViewFullProject}
           />
         )}
       </AnimatePresence>
@@ -257,8 +306,6 @@ function App() {
         currentPage={currentPage}
         totalPages={totalPages}
         onNavigate={handleNavigate}
-        onViewFullProject={handleViewFullProject}
-        currentProjectId={getCurrentProjectId()}
         onNavigateToPage={handleNavigateToPage}
       />
     </div>
