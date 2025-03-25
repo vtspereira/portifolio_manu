@@ -1,0 +1,25 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Versão monocromática do compasso para Safari Pinned Tab -->
+  
+  <!-- Parte superior do compasso - retângulo -->
+  <rect x="246" y="86" width="20" height="50" rx="4"/>
+  
+  <!-- Junta central do compasso - círculo -->
+  <circle cx="256" cy="156" r="20"/>
+  <circle cx="256" cy="156" r="8"/>
+  
+  <!-- Pernas do compasso -->
+  <path d="M256 156L170 326" stroke-width="16" stroke-linecap="round"/>
+  <path d="M170 326L166 336" stroke-width="12" stroke-linecap="round"/>
+  <path d="M256 156L342 330" stroke-width="16" stroke-linecap="round"/>
+  
+  <!-- Detalhe de ponto na perna direita -->
+  <circle cx="330" cy="320" r="8"/>
+  
+  <!-- Detalhe de ponto extra -->
+  <circle cx="315" cy="210" r="4"/>
+  
+  <!-- Barra transversal do compasso -->
+  <line x1="168" y1="252" x2="344" y2="252" stroke-width="8" stroke-linecap="round"/>
+  <line x1="256" y1="245" x2="256" y2="259" stroke-width="8" stroke-linecap="round"/>
+</svg> 

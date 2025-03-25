@@ -10,16 +10,19 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
+    background-color: #F8F5F0;
   }
   
   body {
-    @apply bg-white text-[#333333];
+    @apply text-[#333333];
+    background-color: #F8F5F0;
     height: 100%;
     width: 100%;
     overflow: hidden;
     position: fixed;
     font-weight: 300;
     letter-spacing: 0.2px;
+    transition: background-color 0.5s ease;
   }
 
   /* Definições para layout em livro (sem scroll) */
@@ -28,6 +31,7 @@
     position: fixed !important;
     height: 100% !important;
     width: 100% !important;
+    background-color: #F8F5F0 !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -55,10 +59,11 @@
     width: 100% !important;
     height: 100% !important;
     overflow: auto !important;
-    background-color: white !important;
+    background-color: #F8F5F0 !important;
     z-index: 9999 !important;
     display: block !important;
     visibility: visible !important;
+    transition: opacity 0.3s ease-in-out;
   }
   
   /* Footer de navegação */
@@ -68,8 +73,8 @@
     left: 0;
     right: 0;
     height: 50px;
-    background-color: white;
-    border-top: 1px solid #eeeeee;
+    background-color: #F8F5F0;
+    border-top: 1px solid #E0758A;
     z-index: 50;
     display: flex;
     justify-content: center;
@@ -84,12 +89,67 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #dddddd;
+    border: 1px solid #E0758A;
     transition: all 0.3s ease;
   }
   
   .nav-btn-circle:hover {
-    border-color: #333333;
+    border-color: #F5C0CB;
+    background-color: #F5C0CB;
+    color: white;
+  }
+
+  /* Estilização para seções de detalhes do projeto */
+  .project-detail-section {
+    border-top: 1px solid #E0758A;
+    padding-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-detail-title {
+    font-weight: 300;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #333333;
+    position: relative;
+    display: inline-block;
+  }
+
+  .project-detail-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #E0758A;
+  }
+
+  /* Bullets personalizados para listas */
+  .custom-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .custom-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .custom-list li::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #E0758A;
+    margin-top: 6px;
+    flex-shrink: 0;
   }
 }
 
@@ -109,35 +169,101 @@
   }
 
   .btn-project {
-    @apply border border-[#333333] text-[#333333] px-5 py-2 rounded-full text-sm font-light transition-all duration-300;
+    @apply border border-[#E0758A] text-[#333333] px-5 py-2 rounded-full text-sm font-light transition-all duration-300;
+    background-color: rgba(255, 255, 255, 0.6);
   }
 
   .btn-project:hover {
-    @apply bg-[rgba(0,0,0,0.05)];
+    @apply bg-[#E0758A] text-white;
+  }
+
+  .btn-back {
+    @apply bg-[#E0758A] text-white px-5 py-2 rounded-full text-sm font-light transition-all duration-300 flex items-center gap-2;
+  }
+
+  .btn-back:hover {
+    @apply bg-[#F5C0CB];
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px rgba(224, 117, 138, 0.2);
   }
   
   /* Espaço para o footer */
   .pb-footer {
     padding-bottom: 70px;
   }
+
+  /* Animação sutil de fade-in para componentes */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Decorador rosa para separar seções */
+  .section-divider {
+    height: 2px;
+    background-color: #E0758A;
+    width: 60px;
+    margin: 2rem 0;
+  }
+
+  /* Classes para a nova paleta de cores */
+  .bg-primary {
+    background-color: #F8F5F0;
+  }
+
+  .bg-accent {
+    background-color: #E0758A;
+  }
+
+  .bg-accent-light {
+    background-color: #F5C0CB;
+  }
+
+  .text-primary {
+    color: #333333;
+  }
+
+  .text-secondary {
+    color: #666666;
+  }
+
+  .text-accent {
+    color: #E0758A;
+  }
+
+  .border-accent {
+    border-color: #E0758A;
+  }
+
+  .border-accent-light {
+    border-color: #F5C0CB;
+  }
 }
 
 /* Estilizando a scrollbar para elementos com scroll */
 #project-detail-container {
   scrollbar-width: thin;
-  scrollbar-color: #dddddd transparent;
+  scrollbar-color: #E0758A #F8F5F0;
 }
 
 #project-detail-container::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 #project-detail-container::-webkit-scrollbar-track {
-  background: transparent;
+  background: #F8F5F0;
 }
 
 #project-detail-container::-webkit-scrollbar-thumb {
-  background-color: #dddddd;
+  background-color: #E0758A;
   border-radius: 3px;
 }
 
