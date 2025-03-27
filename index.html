@@ -2,9 +2,13 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=5" />
     <title>Portfolio de Arquitetura - Emanuelle De Andrade</title>
     <meta name="description" content="Portfolio da arquiteta Emanuelle De Andrade, apresentando projetos arquitetônicos inovadores e sustentáveis." />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
     <!-- Favicon e ícones para diversos dispositivos -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -18,7 +22,48 @@
     <!-- Fontes e outros recursos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Prevenir comportamentos indesejados em dispositivos móveis -->
+    <style>
+      /* Remover highlight de toque em elementos interativos */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      /* Melhorar comportamento de scroll */
+      html, body {
+        height: 100%;
+        overscroll-behavior: none;
+      }
+      
+      /* Permitir scroll em dispositivos móveis */
+      @media (max-width: 767px) {
+        body {
+          position: static !important;
+          height: auto !important;
+          overflow-y: auto !important;
+          overscroll-behavior-y: none;
+        }
+      }
+      
+      /* Em desktop, manter comportamento de livro */
+      @media (min-width: 768px) {
+        body {
+          position: fixed;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+      }
+      
+      /* Permitir scroll quando visualizando detalhes do projeto */
+      html.viewing-project-detail body {
+        position: static !important;
+        height: auto !important;
+        overflow: auto !important;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

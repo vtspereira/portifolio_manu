@@ -1,7 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin, Calendar, Ruler, Tag, Activity } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Ruler, Tag, Activity, ExternalLink } from 'lucide-react';
 import type { Project } from '../types';
+import { ImageModal } from './ImageModal';
+
+// Componente do botão com estilos garantidos
+const VerProjetoBtn = ({ onClick, className = "" }) => (
+  <button
+    onClick={onClick}
+    aria-label="Ver projeto completo"
+    style={{
+      width: "100%",
+      backgroundColor: "#E0758A",
+      color: "white",
+      border: "1px solid #E0758A",
+      borderRadius: "9999px",
+      padding: "0.75rem 1.5rem",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "0.875rem",
+      fontWeight: "300",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      position: "relative",
+      zIndex: "5",
+      overflow: "hidden"
+    }}
+    className={className}
+  >
+    <span>Ver projeto completo</span>
+    <ExternalLink style={{ width: "0.875rem", height: "0.875rem", marginLeft: "0.5rem" }} />
+  </button>
+);
 
 interface FullProjectViewProps {
   project: Project;
@@ -9,6 +40,30 @@ interface FullProjectViewProps {
 }
 
 export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBack }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  
+  const openModal = (index: number) => {
+    setSelectedImageIndex(index);
+    setIsModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  
+  const handleNextImage = () => {
+    setSelectedImageIndex(prev => 
+      prev === project.images.length - 1 ? 0 : prev + 1
+    );
+  };
+  
+  const handlePrevImage = () => {
+    setSelectedImageIndex(prev => 
+      prev === 0 ? project.images.length - 1 : prev - 1
+    );
+  };
+
   useEffect(() => {
     // Forçar scroll para o topo quando o componente é montado
     window.scrollTo(0, 0);
@@ -183,16 +238,40 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
                 )}
               </div>
             </div>
-            <div style={{ overflow: "hidden" }}>
+            <div style={{ 
+              overflow: "hidden",
+              position: "relative" 
+            }}>
               <img 
                 src={project.images[0]} 
                 alt={project.title}
                 style={{ 
                   width: "100%", 
                   height: "auto", 
-                  objectFit: "cover"
+                  objectFit: "cover",
+                  cursor: "pointer"
                 }}
+                onClick={() => openModal(0)}
               />
+              <div style={{
+                position: "absolute",
+                bottom: "0.75rem",
+                right: "0.75rem",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                padding: "0.5rem 0.75rem",
+                borderRadius: "0.375rem",
+                fontSize: "0.75rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.25rem",
+                pointerEvents: "none",
+                boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)"
+              }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E0758A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                </svg>
+                <span>Ampliar imagem</span>
+              </div>
             </div>
           </div>
         </section>
@@ -220,12 +299,43 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
               </div>
               {project.technicalDiagram && (
                 <div>
-                  <div style={{ overflow: "hidden" }}>
+                  <div style={{ 
+                    overflow: "hidden",
+                    position: "relative"
+                  }}>
                     <img 
                       src={project.technicalDiagram} 
                       alt={`${project.title} - Diagrama técnico`}
-                      style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                      style={{ 
+                        width: "100%", 
+                        height: "auto", 
+                        objectFit: "cover",
+                        cursor: "pointer"
+                      }}
+                      onClick={() => {
+                        // Adiciona o diagrama técnico como última imagem
+                        openModal(project.images.length);
+                      }}
                     />
+                    <div style={{
+                      position: "absolute",
+                      bottom: "0.75rem",
+                      right: "0.75rem",
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      padding: "0.5rem 0.75rem",
+                      borderRadius: "0.375rem",
+                      fontSize: "0.75rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.25rem",
+                      pointerEvents: "none",
+                      boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)"
+                    }}>
+                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E0758A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                      </svg>
+                      <span>Ampliar imagem</span>
+                    </div>
                   </div>
                   <p style={{ color: "#666666", marginTop: "0.75rem", fontSize: "0.875rem", fontWeight: 300 }}>Diagrama conceitual do projeto</p>
                 </div>
@@ -243,12 +353,43 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
             gap: "2.5rem"
           }}>
             {project.images.map((image, index) => (
-              <div key={index} style={{ overflow: "hidden" }}>
+              <div key={index} style={{ 
+                overflow: "hidden",
+                position: "relative"
+              }}>
                 <img 
                   src={image} 
                   alt={`${project.title} - Imagem ${index + 1}`}
-                  style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                  style={{ 
+                    width: "100%", 
+                    height: "auto", 
+                    objectFit: "cover",
+                    cursor: "pointer",
+                    transition: "transform 0.3s ease"
+                  }}
+                  onClick={() => openModal(index)}
+                  onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+                  onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
                 />
+                <div style={{
+                  position: "absolute",
+                  bottom: "0.75rem",
+                  right: "0.75rem",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  padding: "0.5rem 0.75rem",
+                  borderRadius: "0.375rem",
+                  fontSize: "0.75rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.25rem",
+                  pointerEvents: "none",
+                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)"
+                }}>
+                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E0758A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                </svg>
+                  <span>Ampliar imagem</span>
+                </div>
               </div>
             ))}
           </div>
@@ -335,7 +476,7 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
           margin: "0 auto",
           padding: "0 1.5rem",
         }}>
-          <p style={{ color: "#666666" }}>© 2025Emanuelle de Andrade Arquitetura</p>
+          <p style={{ color: "#666666" }}>© 2025 Emanuelle de Andrade Arquitetura</p>
           <button 
             onClick={onBack}
             className="btn-back mt-4 mx-auto"
@@ -349,6 +490,21 @@ export const FullProjectView: React.FC<FullProjectViewProps> = ({ project, onBac
           </button>
         </div>
       </footer>
+      
+      {/* Modal para visualização ampliada das imagens */}
+      <ImageModal
+        imageSrc={selectedImageIndex === project.images.length && project.technicalDiagram 
+          ? project.technicalDiagram 
+          : project.images[selectedImageIndex]}
+        alt={selectedImageIndex === project.images.length && project.technicalDiagram
+          ? `${project.title} - Diagrama técnico`
+          : `${project.title} - Imagem ${selectedImageIndex + 1}`}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onNext={handleNextImage}
+        onPrev={handlePrevImage}
+        hasNavigation={project.images.length > 1}
+      />
     </div>
   );
 }; 

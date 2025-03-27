@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Compass, MapPin, Mail, Globe, Phone, Calendar, ArrowRight } from 'lucide-react';
+import { Compass, MapPin, Mail, Globe, Phone, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Navigation } from './components/Navigation';
 import { Page } from './components/Page';
 import { ProjectPage } from './components/ProjectPage';
@@ -22,6 +22,11 @@ function App() {
   const [viewingFullProject, setViewingFullProject] = useState<number | null>(null);
   const totalPages = projects.length + 4; // Cover + Bio + Index + Projects + Contact
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Referências para controle de swipe
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const minSwipeDistance = 50; // Distância mínima em pixels para considerar um swipe
 
   // Definir títulos personalizados para cada página
   const pageTitles = [
@@ -99,6 +104,47 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [currentPage, totalPages, viewingFullProject]);
+  
+  // Adicionar suporte para navegação com swipe em dispositivos móveis
+  useEffect(() => {
+    // Não adicionar swipe quando estiver visualizando projeto completo
+    if (viewingFullProject !== null) return;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.changedTouches[0].screenX;
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      touchEndX.current = e.changedTouches[0].screenX;
+      handleSwipe();
+    };
+    
+    const handleSwipe = () => {
+      if (touchStartX.current === null || touchEndX.current === null) return;
+      
+      const distance = touchStartX.current - touchEndX.current;
+      const isLeftSwipe = distance > minSwipeDistance;
+      const isRightSwipe = distance < -minSwipeDistance;
+      
+      if (isLeftSwipe) {
+        handleNavigate('next');
+      } else if (isRightSwipe) {
+        handleNavigate('prev');
+      }
+      
+      // Reset para próximo swipe
+      touchStartX.current = null;
+      touchEndX.current = null;
+    };
+    
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentPage, viewingFullProject]);
 
   const handleNavigate = (direction: 'prev' | 'next') => {
     setCurrentPage(prev => 
@@ -167,13 +213,16 @@ function App() {
             <Page key="cover" className="bg-primary">
               <div className="h-full flex flex-col items-center justify-center text-center relative">
                 <Compass className="w-12 h-12 md:w-16 md:h-16 mb-6 md:mb-8 text-accent" />
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-3 md:mb-4 text-primary tracking-wide">EMANUELLE DE ANDRADE</h1>
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-light mb-3 md:mb-4 text-primary tracking-wide">EMANUELLE DE ANDRADE</h1>
                 <p className="text-base md:text-lg lg:text-xl text-secondary font-light">ARCHITECTURAL PORTFOLIO</p>
                 
-                {/* Seta minimalista centralizada */}
+                {/* Seta minimalista centralizada - em mobile, mova para baixo */}
                 <button 
                   onClick={() => handleNavigate('next')} 
-                  className="absolute right-8 md:right-16 top-1/2 transform -translate-y-1/2 cursor-pointer focus:outline-none focus:ring-0 group"
+                  className={`
+                    ${isMobile ? 'absolute bottom-12 right-1/2 translate-x-1/2' : 'absolute right-8 md:right-16 top-1/2 transform -translate-y-1/2'} 
+                    cursor-pointer focus:outline-none focus:ring-0 group
+                  `}
                   aria-label="Próxima página"
                 >
                   <div className="relative flex flex-col items-center">
@@ -191,9 +240,9 @@ function App() {
         {currentPage === 1 && (
           <motion.div key="bio" {...pageTransition}>
             <Page key="bio" className="bg-primary">
-              <div className="h-full flex flex-col md:flex-row overflow-hidden">
+              <div className="h-full flex flex-col md:flex-row overflow-auto mobile-scroll pb-16 md:pb-0 md:overflow-hidden">
                 {/* Coluna lateral esquerda (30-35%) */}
-                <div className="w-full md:w-[35%] h-full md:min-h-full p-4 md:p-6 lg:p-8 md:border-r border-[#E5E0DB] flex flex-col">
+                <div className="w-full md:w-[35%] p-4 md:p-6 lg:p-8 md:border-r border-[#E5E0DB] flex flex-col">
                   {/* Foto e informações pessoais */}
                   <div className="mb-4 md:mb-5 flex flex-col items-center md:items-start">
                     {/* Placeholder para foto */}
@@ -206,32 +255,32 @@ function App() {
                   </div>
                   
                   {/* Informações de contato */}
-                  <div className="mb-4 md:mb-5">
+                  <div className="mb-6 md:mb-5">
                     <h2 className="text-xs uppercase tracking-wider text-primary mb-2 font-light border-b border-accent pb-1.5 inline-block">Contato</h2>
-                    <div className="space-y-2 mt-2">
+                    <div className="space-y-3 mt-3">
                       <div className="flex items-center gap-3">
-                        <MapPin size={14} className="flex-shrink-0 text-accent" />
-                        <span className="text-xs text-secondary">San Francisco, CA</span>
+                        <MapPin size={16} className="flex-shrink-0 text-accent" />
+                        <span className="text-sm text-secondary">San Francisco, CA</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Mail size={14} className="flex-shrink-0 text-accent" />
-                        <a href="mailto:emanuelle.deandrade@email.com" className="text-xs text-secondary hover:text-accent transition-colors duration-300">emanuelle.deandrade@email.com</a>
+                        <Mail size={16} className="flex-shrink-0 text-accent" />
+                        <a href="mailto:emanuelle.deandrade@email.com" className="text-sm text-secondary hover:text-accent transition-colors duration-300">emanuelle.deandrade@email.com</a>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Globe size={14} className="flex-shrink-0 text-accent" />
-                        <a href="https://www.emanuelledeandrade.com" target="_blank" rel="noopener noreferrer" className="text-xs text-secondary hover:text-accent transition-colors duration-300">www.emanuelledeandrade.com</a>
+                        <Globe size={16} className="flex-shrink-0 text-accent" />
+                        <a href="https://www.emanuelledeandrade.com" target="_blank" rel="noopener noreferrer" className="text-sm text-secondary hover:text-accent transition-colors duration-300">www.emanuelledeandrade.com</a>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Phone size={14} className="flex-shrink-0 text-accent" />
-                        <span className="text-xs text-secondary">(555) 123-4567</span>
+                        <Phone size={16} className="flex-shrink-0 text-accent" />
+                        <span className="text-sm text-secondary">(555) 123-4567</span>
                       </div>
                     </div>
                   </div>
                   
                   {/* Sobre mim */}
-                  <div className="mb-4 md:mb-5">
-                    <h2 className="text-xs uppercase tracking-wider text-primary mb-2 font-light border-b border-accent pb-1.5 inline-block">Perfil</h2>
-                    <p className="text-xs leading-relaxed text-secondary mt-2">
+                  <div className="mb-6 md:mb-5">
+                    <h2 className="text-xs uppercase tracking-wider text-primary mb-1.5 font-light border-b border-accent pb-1.5 inline-block">Perfil</h2>
+                    <p className="text-sm leading-relaxed text-secondary mt-3">
                       With over a decade of experience in architectural design, I specialize in creating 
                       spaces that harmoniously blend functionality with aesthetic beauty. My approach 
                       combines sustainable practices with innovative design solutions.
@@ -239,46 +288,49 @@ function App() {
                   </div>
                   
                   {/* Idiomas em formato horizontal */}
-                  <div className="mb-4 md:mb-auto">
-                    <h2 className="text-xs uppercase tracking-wider text-primary mb-2 font-light border-b border-accent pb-1.5 inline-block">Idiomas</h2>
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-2">
+                  <div className="mb-8 md:mb-auto">
+                    <h2 className="text-xs uppercase tracking-wider text-primary mb-1.5 font-light border-b border-accent pb-1.5 inline-block">Idiomas</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-3 mt-3">
                       <div className="flex items-center">
-                        <span className="text-xs text-secondary">English</span>
+                        <span className="text-sm text-secondary">English</span>
                         <span className="mx-1.5 text-accent">•</span>
-                        <span className="text-xs text-secondary">Nativo</span>
+                        <span className="text-sm text-secondary">Nativo</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="text-xs text-secondary">Spanish</span>
+                        <span className="text-sm text-secondary">Spanish</span>
                         <span className="mx-1.5 text-accent">•</span>
-                        <span className="text-xs text-secondary">Fluente</span>
+                        <span className="text-sm text-secondary">Fluente</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="text-xs text-secondary">French</span>
+                        <span className="text-sm text-secondary">French</span>
                         <span className="mx-1.5 text-accent">•</span>
-                        <span className="text-xs text-secondary">Intermediário</span>
+                        <span className="text-sm text-secondary">Intermediário</span>
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Divisor para mobile */}
+                  <div className="block md:hidden w-full h-px bg-[#E5E0DB] my-2"></div>
                 </div>
                 
                 {/* Área principal direita (65-70%) */}
-                <div className="w-full md:w-[65%] h-full md:min-h-full p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
+                <div className="w-full md:w-[65%] p-4 md:p-6 lg:p-8 flex flex-col">
                   {/* Experiência - com timeline */}
-                  <div className="mb-5 md:mb-6">
-                    <h2 className="text-sm uppercase font-light tracking-wider text-primary border-b border-accent pb-2 mb-4">Experiência Profissional</h2>
+                  <div className="mb-8 md:mb-5">
+                    <h2 className="text-sm uppercase font-light tracking-wider text-primary border-b border-accent pb-1.5 mb-4">Experiência Profissional</h2>
                     
-                    <div className="relative pl-5 space-y-4 md:space-y-5 before:absolute before:top-2 before:bottom-2 before:left-0 before:w-[1px] before:bg-[#E5E0DB]">
+                    <div className="relative pl-5 space-y-5 md:space-y-4 before:absolute before:top-2 before:bottom-2 before:left-0 before:w-[1px] before:bg-[#E5E0DB]">
                       <div className="relative">
                         <div className="absolute top-0 left-[-21px] w-4 h-4 rounded-full bg-white border border-accent"></div>
-                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
                           <h3 className="text-sm font-medium text-primary">Foster + Partners</h3>
                           <div className="flex items-center mt-1 sm:mt-0">
                             <span className="text-xs text-secondary mr-1.5">2020 - 2023</span>
                             <span className="inline-block px-1.5 py-0.5 bg-accent-light text-primary text-[10px] rounded">3 anos</span>
                           </div>
                         </div>
-                        <p className="text-xs text-accent italic mb-1">Senior Architect / Project Lead</p>
-                        <ul className="space-y-0.5 list-disc list-inside text-xs text-secondary">
+                        <p className="text-xs text-accent italic mb-2">Senior Architect / Project Lead</p>
+                        <ul className="space-y-1 list-disc list-inside text-xs text-secondary">
                           <li>Led design teams for major commercial projects in Asia and Europe</li>
                           <li>Developed sustainable design strategies for LEED certification</li>
                         </ul>
@@ -286,15 +338,15 @@ function App() {
                       
                       <div className="relative">
                         <div className="absolute top-0 left-[-21px] w-4 h-4 rounded-full bg-white border border-accent"></div>
-                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
                           <h3 className="text-sm font-medium text-primary">Gensler</h3>
                           <div className="flex items-center mt-1 sm:mt-0">
                             <span className="text-xs text-secondary mr-1.5">2018 - 2020</span>
                             <span className="inline-block px-1.5 py-0.5 bg-accent-light text-primary text-[10px] rounded">2 anos</span>
                           </div>
                         </div>
-                        <p className="text-xs text-accent italic mb-1">Project Architect</p>
-                        <ul className="space-y-0.5 list-disc list-inside text-xs text-secondary">
+                        <p className="text-xs text-accent italic mb-2">Project Architect</p>
+                        <ul className="space-y-1 list-disc list-inside text-xs text-secondary">
                           <li>Designed and coordinated residential and commercial projects</li>
                           <li>Collaborated with engineers and contractors</li>
                         </ul>
@@ -303,11 +355,11 @@ function App() {
                   </div>
                   
                   {/* Educação */}
-                  <div className="mb-5 md:mb-6">
-                    <h2 className="text-sm uppercase font-light tracking-wider text-primary border-b border-accent pb-2 mb-4">Educação</h2>
+                  <div className="mb-8 md:mb-5">
+                    <h2 className="text-sm uppercase font-light tracking-wider text-primary border-b border-accent pb-1.5 mb-4">Educação</h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="border-l-2 border-accent pl-3 py-0.5 hover:border-accent-light transition-colors duration-300">
+                      <div className="border-l-2 border-accent pl-3 py-1 hover:border-accent-light transition-colors duration-300">
                         <div className="mb-1">
                           <h3 className="text-sm font-medium text-primary">Master of Architecture</h3>
                         </div>
@@ -315,7 +367,7 @@ function App() {
                         <p className="text-xs text-accent">2014 - 2018</p>
                       </div>
                       
-                      <div className="border-l-2 border-accent pl-3 py-0.5 hover:border-accent-light transition-colors duration-300">
+                      <div className="border-l-2 border-accent pl-3 py-1 hover:border-accent-light transition-colors duration-300">
                         <div className="mb-1">
                           <h3 className="text-sm font-medium text-primary">Bachelor of Arts in Architecture</h3>
                         </div>
@@ -326,10 +378,10 @@ function App() {
                   </div>
                   
                   {/* Software Skills - Visual Grid */}
-                  <div>
-                    <h2 className="text-sm uppercase font-light tracking-wider text-primary border-b border-accent pb-2 mb-4">Habilidades de Software</h2>
+                  <div className="mb-8 md:mb-0">
+                    <h2 className="text-sm uppercase font-light tracking-wider text-primary border-b border-accent pb-1.5 mb-4">Habilidades de Software</h2>
                     
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-x-3 gap-y-4">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-x-2 gap-y-4">
                       {[
                         {name: 'AutoCAD', icon: 'A'},
                         {name: 'Revit', icon: 'R'},
@@ -345,7 +397,7 @@ function App() {
                       ].map((software) => (
                         <div key={software.name} className="group flex flex-col items-center">
                           {/* Ícone com design minimalista arquitetônico */}
-                          <div className="w-12 h-12 bg-white border border-accent flex items-center justify-center mb-2 group-hover:border-accent-light transition-all duration-300 relative overflow-hidden shadow-sm">
+                          <div className="w-10 h-10 bg-white border border-accent flex items-center justify-center mb-1.5 group-hover:border-accent-light transition-all duration-300 relative overflow-hidden shadow-sm">
                             {/* Fundo sutilmente texturizado */}
                             <div className="absolute inset-0 bg-gradient-to-br from-white to-[#FBF9F7] opacity-80"></div>
                             

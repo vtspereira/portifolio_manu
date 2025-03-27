@@ -2,7 +2,259 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400&display=swap');
+:root {
+  --color-primary: #1A1A1A;
+  --color-secondary: #4D4D4D;
+  --color-accent: #E0758A;
+  --color-accent-light: #F5C0CB;
+  --color-bg-primary: #F8F5F0;
+  --color-border: #E5E0DB;
+  
+  /* Altura real para dispositivos móveis */
+  --vh: 1vh;
+}
+
+/* Fonte personalizada: usar Google Fonts ou fonte local */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+
+/* Estilos globais */
+html, body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-primary);
+  background-color: var(--color-bg-primary);
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset do scroll para quando visualizamos detalhes do projeto */
+html.viewing-project-detail,
+html.viewing-project-detail body {
+  overflow-y: auto;
+  height: auto;
+}
+
+/* Estilos para o layout do livro */
+.book-layout {
+  overflow: hidden;
+}
+
+/* Altura para mobile usando a var --vh */
+@media (max-width: 767px) {
+  .h-screen {
+    height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  .min-h-screen {
+    min-height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  .h-full {
+    height: auto; /* Mudando para auto para permitir scroll */
+    min-height: calc(var(--vh, 1vh) * 100 - 60px); /* Ajuste para o rodapé/navegação */
+  }
+  
+  /* Permitir scroll em páginas com conteúdo longo em mobile */
+  .mobile-scroll {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: calc(100vh - 120px) !important;
+    padding-bottom: 100px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Correção para corpo da página */
+  body {
+    position: static !important; /* Sobrescrever o position:fixed do iOS fix */
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+  
+  /* Manter comportamento de book layout quando necessário */
+  body.book-layout {
+    overflow-x: hidden !important;
+  }
+  
+  /* Aumentar espaçamentos para melhor legibilidade */
+  .mobile-scroll h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Garantir que todo o conteúdo seja visível */
+  .mobile-scroll .pb-16 {
+    padding-bottom: 120px !important;
+  }
+  
+  /* Melhorar espaçamento das seções */
+  .mobile-scroll .mb-8 {
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Evitar problema de corte na página de perfil */
+  .bg-primary {
+    min-height: calc(100vh - 50px);
+  }
+}
+
+/* Animações */
+@keyframes subtleAttention {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+}
+
+.animate-subtle-attention {
+  animation: subtleAttention 3s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Utilitários adicionais */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-primary {
+  background-color: var(--color-bg-primary);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-accent-light {
+  background-color: var(--color-accent-light);
+}
+
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+.border-accent-light {
+  border-color: var(--color-accent-light);
+}
+
+/* Altura com ajuste para o footer de navegação */
+.pb-footer {
+  padding-bottom: 50px;
+}
+
+/* Mobile Específico - Melhorias de UX */
+@media (max-width: 767px) {
+  /* Aumentar tamanho touch para botões e links */
+  button, 
+  a {
+    padding: 0.5rem;
+    margin: -0.5rem;
+    background-clip: content-box;
+  }
+  
+  /* Ajustar tamanhos de texto para melhor leitura */
+  h1 {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  p, li {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Melhorar espaçamento para conteúdo */
+  .p-4 {
+    padding: 1rem !important;
+  }
+  
+  /* Melhorar navegação entre projetos */
+  .pb-footer {
+    padding-bottom: 80px !important;
+  }
+  
+  /* Diminuir animações para performance */
+  .animate-subtle-attention {
+    animation-duration: 4s;
+  }
+  
+  /* Ajustar layout do livro para mobile */
+  .book-layout {
+    overflow-x: hidden;
+  }
+  
+  /* Aumentar área para cliques */
+  .w-7.h-7 {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  
+  /* Ajustar ícones para toque */
+  svg {
+    min-width: 18px;
+    min-height: 18px;
+  }
+  
+  /* Evitar sobreposição da navegação */
+  .mobile-scroll {
+    margin-bottom: 50px !important;
+    padding-bottom: 70px !important;
+  }
+  
+  /* Posição fixa para a navegação no mobile */
+  .navigation-footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05) !important;
+  }
+}
+
+/* Melhorias específicas para dispositivos muito pequenos */
+@media (max-width: 360px) {
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .p-4 {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Correções para telas mais largas */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+}
 
 @layer base {
   html {
@@ -284,5 +536,279 @@
 @media screen and (max-width: 767px) {
   :root {
     --vh: calc(1vh);
+  }
+}
+
+/* Ajustes para o preview de produtos em mobile */
+@media (max-width: 767px) {
+  .project-preview {
+    aspect-ratio: 16/9;
+    max-height: 35vh;
+    object-fit: cover;
+  }
+}
+
+/* Estilo definitivo para o botão Ver projeto completo */
+button[aria-label="Ver projeto completo"] {
+  background-color: #E0758A !important;
+  border: 1px solid #E0758A !important;
+  color: white !important;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 9999px !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-size: 0.875rem !important;
+  font-weight: 300 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  z-index: 5 !important;
+  overflow: hidden !important;
+}
+
+button[aria-label="Ver projeto completo"] span {
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+button[aria-label="Ver projeto completo"] svg {
+  width: 0.875rem !important;
+  height: 0.875rem !important;
+  margin-left: 0.5rem !important;
+  flex-shrink: 0 !important;
+}
+
+button[aria-label="Ver projeto completo"]:hover {
+  background-color: #F5C0CB !important;
+  border-color: #F5C0CB !important;
+  color: #1A1A1A !important;
+}
+
+/* Complemento para o botão Ver projeto completo - mobile */
+@media screen and (max-width: 767px) {
+  button[aria-label="Ver projeto completo"] {
+    background-color: #E0758A !important;
+    border: 1px solid #E0758A !important;
+    color: white !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    padding: 12px 16px !important;
+  }
+  
+  .w-full.mb-10.md\:mb-0 {
+    width: 100% !important;
+    margin-bottom: 2.5rem !important;
+  }
+  
+  /* Garantir que o corpo do botão tenha o background correto */
+  button[aria-label="Ver projeto completo"]::before,
+  button[aria-label="Ver projeto completo"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #E0758A;
+    z-index: -1;
+  }
+}
+
+/* Garantir que todas as imagens do app tenham altura adequada */
+.group.relative.overflow-hidden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4/3;
+  padding: 5px;
+}
+
+.group.relative.overflow-hidden img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: none;
+  margin: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 767px) {
+  .group.relative.overflow-hidden {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4/3;
+    min-height: 200px;
+    padding: 5px;
+  }
+  
+  .group.relative.overflow-hidden img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: none;
+    transform: scale(1);
+  }
+}
+
+/* Ajustes específicos para imagens em miniatura */
+.relative.h-\[80px\] img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* Estilos específicos para containers de imagens de projetos */
+.project-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f2ee;
+}
+
+.project-image {
+  max-width: 95%;
+  max-height: 95%;
+  width: auto;
+  height: auto;
+  object-fit: scale-down;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  .project-image-container {
+    min-height: 180px;
+  }
+  
+  .project-image {
+    max-width: 90%;
+    max-height: 90%;
+  }
+}
+
+/* Estilos para imagens clicáveis e modal */
+img[role="button"],
+img.cursor-pointer {
+  cursor: pointer !important;
+}
+
+/* Alterar classes específicas do container que usavam cursor-zoom-in */
+.w-full.h-full.flex.justify-center.items-center.cursor-zoom-in,
+div.cursor-zoom-in {
+  cursor: pointer !important;
+}
+
+/* Efeito sutil de hover para imagens clicáveis */
+.project-image-container img:hover,
+img.cursor-pointer:hover {
+  transform: scale(1.03);
+  transition: transform 0.3s ease;
+}
+
+/* Animação sutil de pulse para indicar que a imagem é clicável */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(224, 117, 138, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(224, 117, 138, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 117, 138, 0);
+  }
+}
+
+/* Estilo para tip de clique */
+.absolute.bottom-3.right-3 {
+  animation: fadeIn 0.5s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para os botões de navegação no modal */
+button[aria-label="Fechar modal"],
+button[aria-label="Imagem anterior"],
+button[aria-label="Próxima imagem"] {
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+button[aria-label="Fechar modal"]:hover,
+button[aria-label="Imagem anterior"]:hover,
+button[aria-label="Próxima imagem"]:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  background-color: white;
+}
+
+/* Estilo para zoom das imagens no modal */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  /* Ajustes no modal para melhor experiência em dispositivos móveis */
+  button[aria-label="Imagem anterior"],
+  button[aria-label="Próxima imagem"] {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  /* Garantir que as dicas de clique sejam visíveis em mobile */
+  .absolute.bottom-3.right-3 {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+}
+
+/* Estilo para quando o modal está aberto */
+body.modal-open {
+  overflow: hidden !important;
+  height: 100% !important;
+  width: 100% !important;
+  position: fixed !important;
+}
+
+/* Garantir que o modal esteja acima de qualquer outro elemento */
+.modal-open .motion-div[style*="z-index: 99999"] {
+  z-index: 99999 !important;
+}
+
+/* Melhorar visualização em mobile */
+@media (max-width: 767px) {
+  /* Ajustar botões para mobile */
+  button[aria-label="Fechar modal"] {
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    width: 2rem !important; 
+    height: 2rem !important;
+  }
+  
+  /* Garantir que os botões de navegação sejam visíveis */
+  button[aria-label="Imagem anterior"],
+  button[aria-label="Próxima imagem"] {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  /* Garantir espaço adequado para botões e imagem */
+  .motion-img[style*="maxHeight"] {
+    max-height: calc(100vh - 8rem) !important;
   }
 }

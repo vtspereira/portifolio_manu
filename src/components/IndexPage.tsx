@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import type { Project } from '../types';
 import { Page } from './Page';
+import { ImageModal } from './ImageModal';
+import { ExternalLink, ArrowRight } from 'lucide-react';
 
 interface IndexPageProps {
   projects: Project[];
@@ -32,6 +35,20 @@ export const IndexPage: React.FC<IndexPageProps> = ({
   onNavigateToPage,
   totalPages
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  
+  const openModal = (project: Project, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProject(null);
+  };
+
   return (
     <Page>
       <div className="h-full flex flex-col py-4 md:py-5 overflow-auto">
@@ -58,20 +75,32 @@ export const IndexPage: React.FC<IndexPageProps> = ({
                 variants={cardVariants}
               >
                 <div 
-                  className="group relative overflow-hidden cursor-pointer mb-3 w-full"
+                  className="group relative overflow-hidden cursor-pointer mb-3 w-full project-image-container"
                   style={{ 
                     aspectRatio: '4/3',
-                    maxHeight: '280px'
+                    backgroundColor: '#f5f2ee',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative'
                   }}
                   onClick={() => onViewFullProject(project.id)}
                 >
                   <img
                     src={project.images[0]}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03] group-hover:blur-[2px]"
+                    className="project-image max-w-full max-h-full w-auto h-auto object-none transition-transform duration-700 group-hover:scale-[1.03]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-[#E0758A] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+                  
+                  {/* Botão de ver detalhes ao passar o mouse */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="bg-white/90 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-md">
+                      <ExternalLink size={14} className="text-[#E0758A]" />
+                      <span className="text-sm text-[#1A1A1A] font-light">Ver projeto</span>
+                    </div>
+                  </div>
                 </div>
                 <div className="min-h-[60px] mt-1 pb-3 flex flex-col">
                   <h3 
@@ -84,12 +113,31 @@ export const IndexPage: React.FC<IndexPageProps> = ({
                   <p className="text-[#666666] text-sm font-light truncate w-full pr-1" title={`${project.location}, ${project.year}`}>
                     {project.location}, {project.year}
                   </p>
+                  
+                  {/* Link para ver mais sobre o projeto */}
+                  <button
+                    onClick={() => onViewFullProject(project.id)}
+                    className="mt-2 text-[#E0758A] text-xs font-light flex items-center hover:text-[#F5C0CB] transition-colors duration-300"
+                  >
+                    Ver mais sobre o projeto <ArrowRight size={14} className="ml-1" />
+                  </button>
                 </div>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </div>
+      
+      {/* Modal para visualização ampliada de imagens */}
+      {selectedProject && (
+        <ImageModal
+          imageSrc={selectedProject.images[0]}
+          alt={selectedProject.title}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          hasNavigation={false}
+        />
+      )}
     </Page>
   );
 };
