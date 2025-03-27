@@ -1,4 +1,4 @@
-# Portfolio de Arquitetura - Sofia Martinez
+# Portfolio de Arquitetura - Emanuelle De Andrade
 
 ![Status do Projeto](https://img.shields.io/badge/status-ativo-success)
 ![Versão](https://img.shields.io/badge/versão-1.0.0-blue)
@@ -10,7 +10,7 @@
 
 ## 📋 Visão Geral
 
-Portfolio digital de arquitetura com navegação inovadora estilo "livro", desenvolvido para a arquiteta Sofia Martinez. Este projeto apresenta uma experiência de usuário elegante e moderna, permitindo que os visitantes naveguem horizontalmente entre os projetos arquitetônicos como se estivessem folheando um livro de arquitetura físico.
+Portfolio digital de arquitetura com navegação inovadora estilo "livro", desenvolvido para a arquiteta Emanuelle De Andrade. Este projeto apresenta uma experiência de usuário elegante e moderna, permitindo que os visitantes naveguem horizontalmente entre os projetos arquitetônicos como se estivessem folheando um livro de arquitetura físico.
 
 O design minimalista, com foco em um fundo bege suave (#F8F5F0) e detalhes em rosa (#E0758A), proporciona uma experiência visual sofisticada que complementa perfeitamente os projetos arquitetônicos apresentados.
 
@@ -47,10 +47,10 @@ Para configurar o ambiente de desenvolvimento localmente, siga estas etapas:
 
 ```bash
 # Clone o repositório
-git clone https://github.com/username/portfolio-sofia-martinez.git
+git clone https://github.com/username/portfolio-emanuelle-andradenez.git
 
 # Acesse a pasta do projeto
-cd portfolio-sofia-martinez
+cd portfolio-emanuelle-andradenez
 
 # Instale as dependências
 npm install
@@ -181,9 +181,9 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 📞 Contato
 
-Sofia Martinez - [sofia.martinez@email.com](mailto:sofia.martinez@email.com)
+Emanuelle De Andrade - [emanuelle.andradenez@email.com](mailto:emanuelle.andradenez@email.com)
 
-Site - [www.sofiamartinez.com](https://www.sofiamartinez.com)
+Site - [www.emanuelleandradenez.com](https://www.emanuelleandradenez.com)
 
 ---
 

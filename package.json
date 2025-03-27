@@ -1,12 +1,12 @@
 {
-  "name": "portfolio-sofia-martinez",
+  "name": "portfolio-emanuelle-andradenez",
   "private": true,
   "version": "1.0.0",
   "description": "Portfolio de arquitetura com navegação estilo livro",
   "author": {
-    "name": "Sofia Martinez",
-    "email": "sofia.martinez@email.com",
-    "url": "https://www.sofiamartinez.com"
+    "name": "Emanuelle De Andrade",
+    "email": "emanuelle.andradenez@email.com",
+    "url": "https://www.emanuelleandradenez.com"
   },
   "type": "module",
   "scripts": {

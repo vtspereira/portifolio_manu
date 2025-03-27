@@ -6,6 +6,7 @@ import { Page } from './components/Page';
 import { ProjectPage } from './components/ProjectPage';
 import { IndexPage } from './components/IndexPage';
 import { FullProjectView } from './components/FullProjectView';
+import { ContactPage } from './components/ContactPage';
 import { projects } from './data';
 
 // Configuração das animações de transição de página
@@ -19,7 +20,7 @@ const pageTransition = {
 function App() {
   const [currentPage, setCurrentPage] = useState(0);
   const [viewingFullProject, setViewingFullProject] = useState<number | null>(null);
-  const totalPages = projects.length + 3; // Cover + Bio + Index + Projects
+  const totalPages = projects.length + 4; // Cover + Bio + Index + Projects + Contact
   const [isMobile, setIsMobile] = useState(false);
 
   // Definir títulos personalizados para cada página
@@ -27,7 +28,8 @@ function App() {
     "Inicial",
     "Sobre mim",
     "Projetos",
-    ...projects.map(project => project.title)
+    ...projects.map(project => project.title),
+    "Contato"
   ];
 
   // Detectar se é dispositivo móvel e ajustar variável CSS para altura da viewport
@@ -385,13 +387,21 @@ function App() {
           </motion.div>
         )}
 
-        {currentPage >= 3 && (
+        {currentPage >= 3 && currentPage < totalPages - 1 && (
           <motion.div key={`project-${currentPage}`} {...pageTransition}>
             <ProjectPage 
               key={`project-${currentPage}`} 
               project={projects[currentPage - 3]} 
               onViewFullProject={handleViewFullProject}
             />
+          </motion.div>
+        )}
+
+        {currentPage === totalPages - 1 && (
+          <motion.div key="contact" {...pageTransition}>
+            <Page key="contact" className="bg-primary">
+              <ContactPage />
+            </Page>
           </motion.div>
         )}
       </AnimatePresence>
